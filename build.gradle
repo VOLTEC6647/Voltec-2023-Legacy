@@ -3,16 +3,15 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2023.1.1"
 }
 
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+def ROBOT_MAIN_CLASS = "com.team6647.Main"
 allprojects {
 	repositories {
 		maven { url 'https://jitpack.io' }
 	}
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
@@ -49,7 +48,7 @@ def deployArtifact = deploy.targets.roborio.artifacts.frcJava
 wpi.java.debugJni = false
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = true
+def includeDesktopSupport = false
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
@@ -75,7 +74,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
-    implementation 'com.github.AndromedaHelix:AndromedaLib:f31a87995f'
+    implementation 'com.github.AndromedaHelix:AndromedaLib:211d721bdc'
+
 
 }
 
