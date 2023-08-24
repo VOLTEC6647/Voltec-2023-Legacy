@@ -1,7 +1,7 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
+/**
+ * Written by Juan Pablo Gutiérrez
+ * 17 - 08 - 2023
+ */
 package com.team6647.subsystems;
 
 import com.andromedalib.andromedaSwerve.systems.AndromedaSwerve;
@@ -52,14 +52,31 @@ public class AutoDriveSubsystem extends SubsystemBase {
     SmartDashboard.putData(field);
   }
 
+  /**
+   * Gets the current robot pose calculated by the odometry
+   * 
+   * @return Current pose
+   */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
+  /**
+   * Resets the odometry to a defined Pose2D
+   * 
+   * @param pose New Pose2D
+   */
   public void resetOdometry(Pose2d pose) {
     odometry.resetPosition(swerve.getAngle(), swerve.getPositions(), pose);
   }
 
+  /**
+   * Created a new command that follows a defined PathPlanner Trajectory
+   * 
+   * @param trajectory  Trajectory to follow
+   * @param isFirstPath If true, it will reset the odometry
+   * @return FollowTrajectory Command to follow
+   */
   public Command followTrajectoryCommand(PathPlannerTrajectory trajectory, boolean isFirstPath) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> {

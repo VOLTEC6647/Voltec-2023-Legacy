@@ -47,7 +47,6 @@ public class RobotContainer extends SuperRobotContainer {
 
   @Override
   public void configureBindings() {
-
     andromedaSwerve.setDefaultCommand(
         new SwerveDriveCommand(
             andromedaSwerve,

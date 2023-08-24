@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Constants {
-        
+
         public static class OperatorConstants {
                 public static final int kDriverControllerPort = 0;
                 public static final int kDriverControllerPort2 = 1;
