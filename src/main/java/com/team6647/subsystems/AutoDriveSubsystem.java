@@ -6,12 +6,16 @@ package com.team6647.subsystems;
 
 import com.andromedalib.andromedaSwerve.systems.AndromedaSwerve;
 import com.andromedalib.andromedaSwerve.utils.SwerveConstants;
+import com.andromedalib.vision.LimelightHelpers;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,9 +29,11 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
   AndromedaSwerve swerve;
 
-  SwerveDriveOdometry odometry;
+  SwerveDrivePoseEstimator poseEstimator;
 
   Field2d field;
+
+  Alliance alliance;
 
   /** Creates a new AutoDriveSubsystem. */
   private AutoDriveSubsystem(AndromedaSwerve swerve) {
@@ -35,7 +41,13 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
     field = new Field2d();
 
-    this.odometry = new SwerveDriveOdometry(SwerveConstants.swerveKinematics, swerve.getAngle(), swerve.getPositions());
+    this.poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, swerve.getAngle(),
+        swerve.getPositions(), new Pose2d());
+
+    resetOdometry(new Pose2d());
+
+    this.alliance = DriverStation.getAlliance();
+
   }
 
   public static AutoDriveSubsystem getInstance(AndromedaSwerve swerve) {
@@ -47,9 +59,23 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    odometry.update(swerve.getAngle(), swerve.getPositions());
+    poseEstimator.update(swerve.getAngle(), swerve.getPositions());
     field.setRobotPose(getPose());
     SmartDashboard.putData(field);
+
+    LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
+
+    if (!(result.botpose[0] == 0 && result.botpose[1] == 0) && LimelightHelpers.getTA("limelight") < 30) {
+      if (alliance == Alliance.Blue) {
+        poseEstimator.addVisionMeasurement(
+            LimelightHelpers.toPose2D(result.botpose_wpiblue),
+            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0));
+      } else if (alliance == Alliance.Red) {
+        poseEstimator.addVisionMeasurement(
+            LimelightHelpers.toPose2D(result.botpose_wpired),
+            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0));
+      }
+    }
   }
 
   /**
@@ -58,7 +84,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * @return Current pose
    */
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
   }
 
   /**
@@ -67,7 +93,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * @param pose New Pose2D
    */
   public void resetOdometry(Pose2d pose) {
-    odometry.resetPosition(swerve.getAngle(), swerve.getPositions(), pose);
+    poseEstimator.resetPosition(swerve.getAngle(), swerve.getPositions(), pose);
   }
 
   /**
