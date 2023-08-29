@@ -60,9 +60,17 @@ public class AutoDriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     poseEstimator.update(swerve.getAngle(), swerve.getPositions());
+    computeVisionMeasurements();
+
     field.setRobotPose(getPose());
     SmartDashboard.putData(field);
+  }
 
+  /**
+   * Computes Limelight MegaBotBose data and adds it into the
+   * {@link SwerveDrivePoseEstimator}
+   */
+  public void computeVisionMeasurements() {
     LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
     if (!(result.botpose[0] == 0 && result.botpose[1] == 0) && LimelightHelpers.getTA("limelight") < 30) {
