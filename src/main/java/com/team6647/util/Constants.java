@@ -24,4 +24,29 @@ public class Constants {
                 private static final String kShuffleboardTabName = "Team 6647";
                 public static final ShuffleboardTab kShuffleboardTab = Shuffleboard.getTab(kShuffleboardTabName);
         }
+
+        public static class ElevatorConstants {
+                public static final int leftMotorID = 15;
+                public static final int rightMotorID = 16;
+
+                public static final double elevatorKp = 0;
+                public static final double elevatorKi = 0;
+                public static final double elevatorKd = 0;
+
+                public static final double elevatorKs = 0;
+                public static final double elevatorKg = 0;
+                public static final double elevatorKv = 0;
+                public static final double elevatorKa = 0;
+
+                public static final int elevatorSwitchID = 0;
+
+                public static final double minElevatorPosition = 0; // TODO SET
+                public static final double maxElevatorPosition = 100; // TODO SET
+
+        }
+
+        public static class IntakeConstants {
+                public static final int pivotIntakeID = 13;
+                public static final int intakeMotorID = 14;
+        }
 }
