@@ -5,10 +5,19 @@
 
 package com.team6647.subsystems;
 
+import com.andromedalib.motorControllers.SuperSparkMax;
+import com.andromedalib.motorControllers.IdleManager.GlobalIdleMode;
+import com.team6647.util.Constants.IntakeConstants;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CubeintakeSubsystem extends SubsystemBase {
-  /** Creates a new CubeintakeSubsystem. */
+
+  private static CubeintakeSubsystem instance;
+
+  private static SuperSparkMax pivotMotor = new SuperSparkMax(IntakeConstants.pivotIntakeID, GlobalIdleMode.brake, false, 50);
+  private static SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.brake, false, 50);
+
   public CubeintakeSubsystem() {}
 
   @Override
