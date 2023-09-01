@@ -14,6 +14,7 @@ import com.team6647.util.Constants.IntakeConstants;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,18 +34,23 @@ public class CubeintakeSubsystem extends SubsystemBase {
       IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(2, 2));
 
   private double setpoint = 2;
-  private PivotState mState;
+  private PivotState mPivotState;
+
+  private RollerStates mRollerState;
 
   double pidVal;
-  SendableChooser<PivotState> stateChooser = new SendableChooser<>();
+  private SendableChooser<PivotState> pivotStateChooser = new SendableChooser<>();
+  private SendableChooser<RollerStates> rollerStateChooser = new SendableChooser<>();
 
   private CubeintakeSubsystem() {
     pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
+    pivotEncoder.setZeroOffset(25.8448869);
+    pivotEncoder.setPositionConversionFactor(100);
 
-    mState = PivotState.HOMED;
+    mPivotState = PivotState.HOMED;
 
-    stateChooser.setDefaultOption("Homed", PivotState.HOMED);
-    stateChooser.addOption("Extended", PivotState.EXTENDED);
+    pivotStateChooser.setDefaultOption("Homed", PivotState.HOMED);
+    pivotStateChooser.addOption("Extended", PivotState.EXTENDED);
 
     pivotController.reset(getPivotPosition());
   }
@@ -58,19 +64,21 @@ public class CubeintakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // TODO Move over to shufflebaord vars
     SmartDashboard.putNumber("PID Value", pidVal);
 
-    SmartDashboard.putData("Pivot", stateChooser);
-
-    SmartDashboard.putNumber("Position", getPivotPosition());
-
-    changeState(stateChooser.getSelected());
+    changePivotState(pivotStateChooser.getSelected());
+    changeRollerState(rollerStateChooser.getSelected());
 
     calculatePID();
   }
 
   public enum PivotState {
     HOMED, EXTENDED,
+  }
+
+  public enum RollerStates {
+    STOPPED, COLLECTING, SPITTING
   }
 
   private void calculatePID() {
@@ -84,16 +92,36 @@ public class CubeintakeSubsystem extends SubsystemBase {
     pivotMotor.setVoltage(total);
   }
 
-  public void changeState(PivotState newState) {
+  public void changePivotState(PivotState newState) {
+    if (newState == mPivotState)
+      return;
+
     switch (newState) {
       case HOMED:
-        mState = newState;
-        changeSetpoint(2);
+        mPivotState = newState;
+        changeSetpoint(IntakeConstants.intakeHomedPosition);
         break;
       case EXTENDED:
-        mState = newState;
-        changeSetpoint(42);
+        mPivotState = newState;
+        changeSetpoint(IntakeConstants.intakeExtendedPosition);
         break;
+    }
+  }
+
+  public void changeRollerState(RollerStates newState) {
+    if (newState == mRollerState)
+      return;
+
+    switch (newState) {
+      case STOPPED:
+        mRollerState = newState;
+        setIntakeSpeed(0);
+      case COLLECTING:
+        mRollerState = newState;
+        setIntakeSpeed(IntakeConstants.intakeSpeed);
+      case SPITTING:
+        mRollerState = newState;
+        setIntakeSpeed(-IntakeConstants.intakeSpeed);
     }
   }
 
@@ -105,7 +133,30 @@ public class CubeintakeSubsystem extends SubsystemBase {
     setpoint = newSetpoint;
   }
 
+  private void setIntakeSpeed(double speed) {
+    intakeMotor.set(speed);
+  }
+
+  /* Telemetry Values */
+
   public double getPivotPosition() {
     return pivotEncoder.getPosition();
+  }
+
+  public SendableChooser<PivotState> getPivotChooser() {
+    return pivotStateChooser;
+  }
+
+  public SendableChooser<RollerStates> getRollerChooser(){
+    return rollerStateChooser;
+  }
+
+
+  public PivotState getPivotState() {
+    return mPivotState;
+  }
+
+  public RollerStates getRollerState(){
+    return mRollerState;
   }
 }
