@@ -13,6 +13,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.team6647.subsystems.AutoDriveSubsystem;
+import com.team6647.subsystems.CubeintakeSubsystem;
 import com.team6647.util.Constants.OperatorConstants;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +24,10 @@ public class RobotContainer extends SuperRobotContainer {
   /* Systems */
   private AndromedaSwerve andromedaSwerve;
   private AutoDriveSubsystem autoDriveSubsystem;
+  /*
+   * private ElevatorSubsystem elevatorSubsystem;
+   */
+  private CubeintakeSubsystem cubeintakeSubsystem;
 
   private RobotContainer() {
   }
@@ -43,6 +48,10 @@ public class RobotContainer extends SuperRobotContainer {
         new FalconAndromedaModule(2, "Back Left Module", AndromedaMap.mod3Const),
         new FalconAndromedaModule(3, "Front Lert Module", AndromedaMap.mod4Const), });
     autoDriveSubsystem = AutoDriveSubsystem.getInstance(andromedaSwerve);
+    /*
+     * elevatorSubsystem = ElevatorSubsystem.getInstance();
+     */
+    cubeintakeSubsystem = CubeintakeSubsystem.getInstance();
   }
 
   @Override
