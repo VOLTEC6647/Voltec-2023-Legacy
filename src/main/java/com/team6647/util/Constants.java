@@ -53,7 +53,12 @@ public class Constants {
                 public static final double intakeKi = 0;
                 public static final double intakeKd = 0;
 
-                public static final double minIntakePosition = 2;
-                public static final double maxIntakePosition = 42;
+                public static final double minIntakePosition = 1;
+                public static final double maxIntakePosition = 43;
+
+                public static final double intakeHomedPosition = 2;
+                public static final double intakeExtendedPosition = 42;
+
+                public static final double intakeSpeed = 0.2;
         }
 }
