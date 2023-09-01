@@ -48,5 +48,12 @@ public class Constants {
         public static class IntakeConstants {
                 public static final int pivotIntakeID = 13;
                 public static final int intakeMotorID = 14;
+
+                public static final double intakeKp = 0.1;
+                public static final double intakeKi = 0;
+                public static final double intakeKd = 0;
+
+                public static final double minIntakePosition = 2;
+                public static final double maxIntakePosition = 42;
         }
 }
