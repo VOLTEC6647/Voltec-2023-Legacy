@@ -38,14 +38,14 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.elevatorSwitchID);
 
   private double setPoint = 0;
-  private elevatorStates mState;
+  private ElevatorStates mState;
 
   private ElevatorSubsystem() {
     rightMotor.follow(leftMotor);
 
     elevatorEncoder = leftMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
-    mState = elevatorStates.STATIC;
+    mState = ElevatorStates.STATIC;
 
   }
 
@@ -60,7 +60,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
   }
 
-  public enum elevatorStates {
+  public enum ElevatorStates {
     STATIC, MOVING,
   }
 
