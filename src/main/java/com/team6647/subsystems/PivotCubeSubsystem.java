@@ -14,50 +14,40 @@ import com.team6647.util.Constants.IntakeConstants;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class CubeintakeSubsystem extends SubsystemBase {
+public class PivotCubeSubsystem extends SubsystemBase {
 
-  private static CubeintakeSubsystem instance;
+  private static PivotCubeSubsystem instance;
 
   private static SuperSparkMax pivotMotor = new SuperSparkMax(IntakeConstants.pivotIntakeID, GlobalIdleMode.brake,
-      false, 50);
-  private static SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.brake,
       false, 50);
 
   private static AbsoluteEncoder pivotEncoder;
 
   private static ProfiledPIDController pivotController = new ProfiledPIDController(IntakeConstants.intakeKp,
-      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(2, 2));
+      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(15, 15));
 
-  private double setpoint = 2;
+  private double setpoint = IntakeConstants.intakeHomedPosition;
   private PivotState mPivotState;
 
-  private RollerStates mRollerState;
-
   double pidVal;
-  private SendableChooser<PivotState> pivotStateChooser = new SendableChooser<>();
-  private SendableChooser<RollerStates> rollerStateChooser = new SendableChooser<>();
 
-  private CubeintakeSubsystem() {
+  private PivotCubeSubsystem() {
     pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    pivotEncoder.setZeroOffset(25.8448869);
+    pivotEncoder.setZeroOffset(90.0467753);
     pivotEncoder.setPositionConversionFactor(100);
+    pivotMotor.burnFlash();
 
     mPivotState = PivotState.HOMED;
 
-    pivotStateChooser.setDefaultOption("Homed", PivotState.HOMED);
-    pivotStateChooser.addOption("Extended", PivotState.EXTENDED);
-
-    pivotController.reset(getPivotPosition());
+    resetPID();
   }
 
-  public static CubeintakeSubsystem getInstance() {
+  public static PivotCubeSubsystem getInstance() {
     if (instance == null) {
-      instance = new CubeintakeSubsystem();
+      instance = new PivotCubeSubsystem();
     }
     return instance;
   }
@@ -66,9 +56,7 @@ public class CubeintakeSubsystem extends SubsystemBase {
   public void periodic() {
     // TODO Move over to shufflebaord vars
     SmartDashboard.putNumber("PID Value", pidVal);
-
-    changePivotState(pivotStateChooser.getSelected());
-    changeRollerState(rollerStateChooser.getSelected());
+    SmartDashboard.putNumber("Setpoint", setpoint);
 
     calculatePID();
   }
@@ -77,14 +65,10 @@ public class CubeintakeSubsystem extends SubsystemBase {
     HOMED, EXTENDED,
   }
 
-  public enum RollerStates {
-    STOPPED, COLLECTING, SPITTING
-  }
-
   private void calculatePID() {
     double pidValue = pivotController.calculate(getPivotPosition(), setpoint);
 
-    pidValue = Functions.clamp(pidValue, -0.2, 0.2);
+    pidValue = Functions.clamp(pidValue, -0.4, 0.4);
     pidVal = pidValue;
 
     double total = pidValue * 12;
@@ -108,23 +92,6 @@ public class CubeintakeSubsystem extends SubsystemBase {
     }
   }
 
-  public void changeRollerState(RollerStates newState) {
-    if (newState == mRollerState)
-      return;
-
-    switch (newState) {
-      case STOPPED:
-        mRollerState = newState;
-        setIntakeSpeed(0);
-      case COLLECTING:
-        mRollerState = newState;
-        setIntakeSpeed(IntakeConstants.intakeSpeed);
-      case SPITTING:
-        mRollerState = newState;
-        setIntakeSpeed(-IntakeConstants.intakeSpeed);
-    }
-  }
-
   private void changeSetpoint(double newSetpoint) {
     if (newSetpoint < IntakeConstants.minIntakePosition || newSetpoint > IntakeConstants.maxIntakePosition) {
       newSetpoint = Functions.clamp(newSetpoint, IntakeConstants.minIntakePosition, IntakeConstants.maxIntakePosition);
@@ -133,8 +100,8 @@ public class CubeintakeSubsystem extends SubsystemBase {
     setpoint = newSetpoint;
   }
 
-  private void setIntakeSpeed(double speed) {
-    intakeMotor.set(speed);
+  public void resetPID() {
+    pivotController.reset(getPivotPosition());
   }
 
   /* Telemetry Values */
@@ -143,20 +110,8 @@ public class CubeintakeSubsystem extends SubsystemBase {
     return pivotEncoder.getPosition();
   }
 
-  public SendableChooser<PivotState> getPivotChooser() {
-    return pivotStateChooser;
-  }
-
-  public SendableChooser<RollerStates> getRollerChooser(){
-    return rollerStateChooser;
-  }
-
-
   public PivotState getPivotState() {
     return mPivotState;
   }
 
-  public RollerStates getRollerState(){
-    return mRollerState;
-  }
 }
