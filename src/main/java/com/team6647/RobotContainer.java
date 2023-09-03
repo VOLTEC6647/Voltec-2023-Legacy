@@ -9,11 +9,11 @@ import com.andromedalib.andromedaSwerve.commands.SwerveDriveCommand;
 import com.andromedalib.andromedaSwerve.systems.AndromedaSwerve;
 import com.andromedalib.andromedaSwerve.utils.AndromedaMap;
 import com.andromedalib.robot.SuperRobotContainer;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.team6647.subsystems.AutoDriveSubsystem;
-import com.team6647.subsystems.CubeintakeSubsystem;
+import com.team6647.commands.hybrid.Intake.MoveIntake;
+import com.team6647.commands.hybrid.Intake.ToggleIntake;
+import com.team6647.subsystems.IntakeSubsystem;
+import com.team6647.subsystems.PivotCubeSubsystem;
+import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.Constants.OperatorConstants;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,11 +23,9 @@ public class RobotContainer extends SuperRobotContainer {
 
   /* Systems */
   private AndromedaSwerve andromedaSwerve;
-  private AutoDriveSubsystem autoDriveSubsystem;
-  /*
-   * private ElevatorSubsystem elevatorSubsystem;
-   */
-  private CubeintakeSubsystem cubeintakeSubsystem;
+
+  private PivotCubeSubsystem cubeintakeSubsystem;
+  private IntakeSubsystem intakeSubsystem;
 
   private RobotContainer() {
   }
@@ -47,11 +45,11 @@ public class RobotContainer extends SuperRobotContainer {
         new FalconAndromedaModule(1, "Back Right Module", AndromedaMap.mod2Const),
         new FalconAndromedaModule(2, "Back Left Module", AndromedaMap.mod3Const),
         new FalconAndromedaModule(3, "Front Lert Module", AndromedaMap.mod4Const), });
-    autoDriveSubsystem = AutoDriveSubsystem.getInstance(andromedaSwerve);
     /*
-     * elevatorSubsystem = ElevatorSubsystem.getInstance();
+     * autoDriveSubsystem = AutoDriveSubsystem.getInstance(andromedaSwerve);
      */
-    cubeintakeSubsystem = CubeintakeSubsystem.getInstance();
+    cubeintakeSubsystem = PivotCubeSubsystem.getInstance();
+    intakeSubsystem = IntakeSubsystem.getInstance();
   }
 
   @Override
@@ -63,11 +61,20 @@ public class RobotContainer extends SuperRobotContainer {
             () -> -OperatorConstants.driverController1.getLeftY(),
             () -> -OperatorConstants.driverController1.getRightX(),
             () -> OperatorConstants.driverController1.leftStick().getAsBoolean()));
+
+    OperatorConstants.driverController2.leftTrigger().whileTrue(new MoveIntake(intakeSubsystem, RollerState.COLLECTING));
+    OperatorConstants.driverController2.rightTrigger().whileTrue(new MoveIntake(intakeSubsystem, RollerState.SPITTING));
+
+    OperatorConstants.driverController2.x().onTrue(new ToggleIntake(cubeintakeSubsystem));
   }
 
   public Command getAutonomousCommand() {
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath("Straigth", new PathConstraints(1, 1));
-    return autoDriveSubsystem.followTrajectoryCommand(examplePath, true);
+    return null;
+    /*
+     * PathPlannerTrajectory examplePath = PathPlanner.loadPath("Straigth", new
+     * PathConstraints(1, 1));
+     * return autoDriveSubsystem.followTrajectoryCommand(examplePath, true);
+     */
   }
 
 }
