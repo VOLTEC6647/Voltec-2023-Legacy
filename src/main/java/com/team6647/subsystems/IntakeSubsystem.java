@@ -1,5 +1,6 @@
 /**
  * Written by Juan Pablo Gutiérrez
+ * 02 09 2023
  */
 package com.team6647.subsystems;
 
@@ -7,58 +8,48 @@ import com.andromedalib.motorControllers.SuperSparkMax;
 import com.andromedalib.motorControllers.IdleManager.GlobalIdleMode;
 import com.team6647.util.Constants.IntakeConstants;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
-
   private static IntakeSubsystem instance;
 
-  private static SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast,
-      false, 50);
+  private SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast, false, 80);
 
-  private RollerStates mRollerState;
+  private RollerState mState = RollerState.STOPPED;
 
-  private SendableChooser<RollerStates> rollerStateChooser = new SendableChooser<>();
-
-  /** Creates a new PivotCubeIntakeSubsystem. */
-  public IntakeSubsystem() {
-    mRollerState = RollerStates.STOPPED;
-
-    rollerStateChooser.setDefaultOption("Stopped", RollerStates.STOPPED);
-    rollerStateChooser.addOption("Collecting", RollerStates.COLLECTING);
-    rollerStateChooser.addOption("Spitting", RollerStates.SPITTING);
+  /** Creates a new IntakeSubsystem. */
+  private IntakeSubsystem() {
   }
 
   public static IntakeSubsystem getInstance() {
-    if (instance == null)
+    if (instance == null) {
       instance = new IntakeSubsystem();
+    }
     return instance;
+  }
+
+  public enum RollerState {
+    STOPPED, COLLECTING, SPITTING
   }
 
   @Override
   public void periodic() {
-    changeRollerState(rollerStateChooser.getSelected());
   }
 
-  public enum RollerStates {
-    STOPPED, COLLECTING, SPITTING
-  }
-
-  public void changeRollerState(RollerStates newState) {
-    if (newState == mRollerState)
-      return;
-      
-    switch (newState) {
+  public void changeRollerState(RollerState rollerState) {
+    switch (rollerState) {
       case STOPPED:
-        mRollerState = newState;
+        mState = RollerState.STOPPED;
         setIntakeSpeed(0);
+        break;
       case COLLECTING:
-        mRollerState = newState;
+        mState = RollerState.COLLECTING;
         setIntakeSpeed(IntakeConstants.intakeSpeed);
+        break;
       case SPITTING:
-        mRollerState = newState;
+        mState = RollerState.SPITTING;
         setIntakeSpeed(-IntakeConstants.intakeSpeed);
+        break;
     }
   }
 
@@ -66,12 +57,8 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor.set(speed);
   }
 
-  public SendableChooser<RollerStates> getRollerChooser() {
-    return rollerStateChooser;
+  /* Telemetry */
+  public RollerState getRollerState(){
+    return mState;
   }
-
-  public RollerStates getRollerState() {
-    return mRollerState;
-  }
-
 }
