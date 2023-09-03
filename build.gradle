@@ -74,7 +74,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
-    implementation 'com.github.AndromedaHelix:AndromedaLib:211d721bdc'
+    implementation 'com.github.AndromedaHelix:AndromedaLib:a90c5e4c74'
 
 
 }
