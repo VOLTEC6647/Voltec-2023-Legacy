@@ -45,6 +45,12 @@ public class Constants {
 
         }
 
+        public static class ConeIntakeConstants{
+                public static final int intakeMotorID = 18;
+
+                public static final double intakeSpeed = 0.3;
+        }
+
         public static class IntakeConstants {
                 public static final int pivotIntakeID = 13;
                 public static final int intakeMotorID = 14;
