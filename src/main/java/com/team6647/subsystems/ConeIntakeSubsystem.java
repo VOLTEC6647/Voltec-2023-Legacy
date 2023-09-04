@@ -5,8 +5,9 @@
 
 package com.team6647.subsystems;
 
-import com.andromedalib.motorControllers.SuperSparkMax;
+import com.andromedalib.motorControllers.SuperTalonFX;
 import com.andromedalib.motorControllers.IdleManager.GlobalIdleMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.Constants.ConeIntakeConstants;
 
@@ -15,8 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ConeIntakeSubsystem extends SubsystemBase {
   private static ConeIntakeSubsystem instance;
 
-  private SuperSparkMax intakeMotor = new SuperSparkMax(ConeIntakeConstants.intakeMotorID, GlobalIdleMode.Coast, false,
-      80);
+  private SuperTalonFX intakeMotor = new SuperTalonFX(ConeIntakeConstants.intakeMotorID, GlobalIdleMode.Coast, false);
 
   private RollerState mState = RollerState.STOPPED;
 
@@ -53,7 +53,7 @@ public class ConeIntakeSubsystem extends SubsystemBase {
   }
 
   private void setIntakeSpeed(double speed) {
-    intakeMotor.set(speed);
+    intakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
   /* Telemetry */

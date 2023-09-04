@@ -2,7 +2,6 @@
  * Written by Juan Pablo Gutiérrez
  * 02 09 2023
  */
-
 package com.team6647.subsystems;
 
 import com.andromedalib.motorControllers.SuperSparkMax;
@@ -59,7 +58,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   /* Telemetry */
-  public RollerState getRollerState(){
+  public RollerState getRollerState() {
     return mState;
   }
 }
