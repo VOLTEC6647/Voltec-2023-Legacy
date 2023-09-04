@@ -2,6 +2,7 @@
  * Written by Juan Pablo Gutiérrez
  * 02 09 2023
  */
+
 package com.team6647.subsystems;
 
 import com.andromedalib.motorControllers.SuperSparkMax;
@@ -13,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase {
   private static IntakeSubsystem instance;
 
-  private SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast, false, 80);
+  private SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast, true, 80);
 
   private RollerState mState = RollerState.STOPPED;
 
