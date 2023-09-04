@@ -22,12 +22,12 @@ public class PivotCubeSubsystem extends SubsystemBase {
   private static PivotCubeSubsystem instance;
 
   private static SuperSparkMax pivotMotor = new SuperSparkMax(IntakeConstants.pivotIntakeID, GlobalIdleMode.brake,
-      false, 80);
+      false, 80, IntakeConstants.pivotPositionConversionFactor, IntakeConstants.pivotZeroOffset);
 
   private static AbsoluteEncoder pivotEncoder;
 
   private static ProfiledPIDController pivotController = new ProfiledPIDController(IntakeConstants.intakeKp,
-      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(15, 15));
+      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(40, 35));
 
   private double setpoint = IntakeConstants.intakeHomedPosition;
   private PivotState mPivotState;
@@ -36,9 +36,6 @@ public class PivotCubeSubsystem extends SubsystemBase {
 
   private PivotCubeSubsystem() {
     pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    pivotEncoder.setPositionConversionFactor(IntakeConstants.pivotPositionConversionFactor);
-    pivotEncoder.setZeroOffset(IntakeConstants.pivotZeroOffset);
-    pivotMotor.burnFlash();
 
     mPivotState = PivotState.HOMED;
 
@@ -68,7 +65,7 @@ public class PivotCubeSubsystem extends SubsystemBase {
   private void calculatePID() {
     double pidValue = pivotController.calculate(getPivotPosition(), setpoint);
 
-    pidValue = Functions.clamp(pidValue, -0.2, 0.2);
+    pidValue = Functions.clamp(pidValue, -0.6, 0.6);
     pidVal = pidValue;
 
     double total = pidValue * 12;
