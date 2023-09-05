@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 public class IntakePieceSequence extends ParallelCommandGroup {
 
-  public IntakePieceSequence(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexer) {
+  public IntakePieceSequence(IntakeSubsystem intakeSubsystem, IndexerSubsystem indexer, RollerState rollerState, IndexerState indexerState) {
 
-    addCommands(new MoveIntake(intakeSubsystem, RollerState.COLLECTING),
-        new MoveIndexer(indexer, IndexerState.INDEXING));
+    addCommands(new MoveIntake(intakeSubsystem, rollerState),
+        new MoveIndexer(indexer, indexerState));
   }
 }
