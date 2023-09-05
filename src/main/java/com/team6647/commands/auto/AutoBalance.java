@@ -47,7 +47,6 @@ public class AutoBalance extends CommandBase {
       drivePower = Math.copySign(0.35, drivePower);
     }
     swerve.drive(new Translation2d(drivePower, 0), currentAngle, false, true);
-
   }
 
   @Override

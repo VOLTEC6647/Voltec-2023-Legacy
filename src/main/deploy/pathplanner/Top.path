@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7992637513052803,
-        "y": 4.458056622710467
+        "x": 1.8021051615019896,
+        "y": 4.396705357646827
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.794349746391272,
-        "y": 4.458056622710467
+        "x": 3.5588505065899025,
+        "y": 4.7379065331047325
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -16,8 +16,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "toggleIntake",
+          "throwIntake",
+          "toggleIntake"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -35,26 +39,30 @@
         "x": 7.531328472084838,
         "y": 4.532571155420088
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
+        "names": [
+          "toggleIntake",
+          "moveIntake",
+          "toggleIntake"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "before",
+        "waitTime": 2.0
       }
     },
     {
       "anchorPoint": {
-        "x": 1.76795025117828,
-        "y": 5.044720846386137
+        "x": 1.8160802606327435,
+        "y": 5.057884114032117
       },
       "prevControl": {
-        "x": 4.674951107567551,
-        "y": 4.809695631544041
+        "x": 4.723081117022016,
+        "y": 4.82285889919002
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -63,8 +71,12 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "toggleIntake",
+          "throwIntake",
+          "toggleIntake"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }

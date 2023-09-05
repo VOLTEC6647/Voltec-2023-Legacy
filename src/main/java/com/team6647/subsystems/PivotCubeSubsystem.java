@@ -27,7 +27,8 @@ public class PivotCubeSubsystem extends SubsystemBase {
   private static AbsoluteEncoder pivotEncoder;
 
   private static ProfiledPIDController pivotController = new ProfiledPIDController(IntakeConstants.intakeKp,
-      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(40, 35));
+      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(60, 55
+      ));
 
   private double setpoint = IntakeConstants.intakeHomedPosition;
   private PivotState mPivotState;

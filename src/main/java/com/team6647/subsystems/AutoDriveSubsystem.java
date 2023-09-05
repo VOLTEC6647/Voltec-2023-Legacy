@@ -4,11 +4,11 @@
  */
 package com.team6647.subsystems;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.andromedalib.andromedaSwerve.systems.AndromedaSwerve;
 import com.andromedalib.andromedaSwerve.utils.SwerveConstants;
+import com.andromedalib.sensors.SuperNavx;
 import com.andromedalib.vision.LimelightHelpers;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -16,9 +16,11 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import com.team6647.commands.hybrid.Intake.MoveIntake;
+import com.team6647.commands.hybrid.Intake.IntakePieceSequence;
 import com.team6647.commands.hybrid.Intake.ToggleIntake;
+import com.team6647.subsystems.IndexerSubsystem.IndexerState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
+import com.team6647.util.Constants.DriveConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -29,9 +31,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -47,6 +47,8 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
   Alliance alliance;
 
+  SuperNavx navx = SuperNavx.getInstance();
+
   /** Creates a new AutoDriveSubsystem. */
   private AutoDriveSubsystem(AndromedaSwerve swerve) {
     this.swerve = swerve;
@@ -57,6 +59,15 @@ public class AutoDriveSubsystem extends SubsystemBase {
         swerve.getPositions(), new Pose2d());
 
     resetOdometry(new Pose2d());
+
+    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(PivotCubeSubsystem.getInstance()));
+    DriveConstants.eventMap.put("moveIntake",
+        new IntakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
+            RollerState.COLLECTING, IndexerState.INDEXING));
+    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(PivotCubeSubsystem.getInstance()));
+    DriveConstants.eventMap.put("throwIntake",
+        new IntakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
+            RollerState.SPITTING, IndexerState.SPITTING).withTimeout(1.5));
 
     this.alliance = DriverStation.getAlliance();
 
@@ -79,23 +90,37 @@ public class AutoDriveSubsystem extends SubsystemBase {
   }
 
   /**
+   * Gets current Navx Roll
+   * 
+   * @return Navx Roll
+   */
+  public double getNavxRoll() {
+    return navx.getRoll();
+  }
+
+  /**
    * Computes Limelight MegaBotBose data and adds it into the
    * {@link SwerveDrivePoseEstimator}
    */
   public void computeVisionMeasurements() {
-   /*  LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
-    if (!(result.botpose[0] == 0 && result.botpose[1] == 0) && LimelightHelpers.getTA("limelight") < 30) {
+    LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
+
+    if (!(result.botpose[0] == 0 && result.botpose[1] == 0) &&
+        LimelightHelpers.getTA("limelight") < 30) {
       if (alliance == Alliance.Blue) {
         poseEstimator.addVisionMeasurement(
             LimelightHelpers.toPose2D(result.botpose_wpiblue),
-            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0));
+            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
+                (result.latency_pipeline / 1000.0));
       } else if (alliance == Alliance.Red) {
         poseEstimator.addVisionMeasurement(
             LimelightHelpers.toPose2D(result.botpose_wpired),
-            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) - (result.latency_pipeline / 1000.0));
+            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
+                (result.latency_pipeline / 1000.0));
       }
-    } */
+    }
+
   }
 
   /**
@@ -144,38 +169,20 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
   }
 
-  public Command createFullAuto() {
-    // This will load the file "FullAuto.path" and generate it with a max velocity
-    // of 4 m/s and a max acceleration of 3 m/s^2
-    // for every path in the group
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("Test", new PathConstraints(4, 3));
+  public Command createFullAuto(String pathName) {
 
-    // This is just an example event map. It would be better to have a constant,
-    // global event map
-    // in your code that will be used by all path following commands.
-    HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("extendIntake", new ToggleIntake(PivotCubeSubsystem.getInstance()).andThen(Commands.waitSeconds(2)));
-    eventMap.put("moveIntake", new MoveIntake(IntakeSubsystem.getInstance(), RollerState.COLLECTING).withTimeout(1));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, new PathConstraints(5, 5));
 
-
-    // Create the AutoBuilder. This only needs to be created once when robot code
-    // starts, not every time you want to create an auto command. A good place to
-    // put this is in RobotContainer along with your subsystems.
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-        this::getPose, // Pose2d supplier
-        this::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
-        SwerveConstants.swerveKinematics, // SwerveDriveKinematics
-        new PIDConstants(1.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y
-                                         // PID controllers)
-        new PIDConstants(1.75, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation
-                                          // controller)
-        swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
-        eventMap,
-        true, // Should the path be automatically mirrored depending on alliance color.
-              // Optional, defaults to true
-        swerve // The drive subsystem. Used to properly set the requirements of path following
-               // commands
-    );
+        this::getPose,
+        this::resetOdometry,
+        SwerveConstants.swerveKinematics,
+        new PIDConstants(1, 0.0, 0.0),
+        new PIDConstants(2, 0.0, 0.0),
+        swerve::setModuleStates,
+        DriveConstants.eventMap,
+        true,
+        swerve);
 
     Command fullAuto = autoBuilder.fullAuto(pathGroup);
 
