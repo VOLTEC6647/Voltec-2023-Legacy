@@ -19,13 +19,11 @@ public class IndexerSubsystem extends SubsystemBase {
 
   private IndexerState mState = IndexerState.STOPPED;
 
-  /** Creates a new IndexerSubsystem. */
   private IndexerSubsystem() {
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
   }
 
   public static IndexerSubsystem getInstance() {
@@ -35,7 +33,7 @@ public class IndexerSubsystem extends SubsystemBase {
   }
 
   public enum IndexerState {
-    STOPPED, INDEXING
+    STOPPED, INDEXING, SPITTING
   }
 
   public void changeIndexerState(IndexerState newState) {
@@ -47,6 +45,10 @@ public class IndexerSubsystem extends SubsystemBase {
       case INDEXING:
         mState = IndexerState.INDEXING;
         setIndexer(IndexerConstants.indexerSpeed);
+        break;
+      case SPITTING:
+        mState = IndexerState.SPITTING;
+        setIndexer(-IndexerConstants.indexerSpeed);
         break;
     }
   }
