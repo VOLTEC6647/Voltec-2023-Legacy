@@ -22,7 +22,7 @@ public class PivotCubeSubsystem extends SubsystemBase {
   private static PivotCubeSubsystem instance;
 
   private static SuperSparkMax pivotMotor = new SuperSparkMax(IntakeConstants.pivotIntakeID, GlobalIdleMode.brake,
-      false, 80, IntakeConstants.pivotPositionConversionFactor, IntakeConstants.pivotZeroOffset);
+      false, 80, IntakeConstants.pivotPositionConversionFactor, IntakeConstants.pivotZeroOffset, true);
 
   private static AbsoluteEncoder pivotEncoder;
 

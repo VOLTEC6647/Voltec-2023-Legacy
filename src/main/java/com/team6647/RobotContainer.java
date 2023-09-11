@@ -7,6 +7,8 @@ import com.andromedalib.andromedaSwerve.andromedaModule.FalconAndromedaModule;
 import com.andromedalib.andromedaSwerve.commands.SwerveDriveCommand;
 import com.andromedalib.andromedaSwerve.systems.AndromedaSwerve;
 import com.andromedalib.andromedaSwerve.utils.AndromedaMap;
+import com.andromedalib.andromedaSwerve.utils.AndromedaProfileConfig;
+import com.andromedalib.andromedaSwerve.utils.AndromedaProfileConfig.AndromedaProfiles;
 import com.andromedalib.robot.SuperRobotContainer;
 import com.team6647.commands.hybrid.Intake.IntakePieceSequence;
 import com.team6647.commands.hybrid.Intake.ToggleIntake;
@@ -48,7 +50,7 @@ public class RobotContainer extends SuperRobotContainer {
         new FalconAndromedaModule(0, "Front Right Module", AndromedaMap.mod1Const),
         new FalconAndromedaModule(1, "Back Right Module", AndromedaMap.mod2Const),
         new FalconAndromedaModule(2, "Back Left Module", AndromedaMap.mod3Const),
-        new FalconAndromedaModule(3, "Front Lert Module", AndromedaMap.mod4Const), });
+        new FalconAndromedaModule(3, "Front Lert Module", AndromedaMap.mod4Const), }, AndromedaProfileConfig.getConfig(AndromedaProfiles.ANDROMEDA_CONFIG));
 
     autoDriveSubsystem = AutoDriveSubsystem.getInstance(andromedaSwerve);
     intakeSubsystem = IntakeSubsystem.getInstance();
