@@ -15,7 +15,7 @@ import com.team6647.commands.hybrid.Intake.ToggleIntake;
 import com.team6647.subsystems.AutoDriveSubsystem;
 import com.team6647.subsystems.IndexerSubsystem;
 import com.team6647.subsystems.IntakeSubsystem;
-import com.team6647.subsystems.PivotCubeSubsystem;
+import com.team6647.subsystems.IntakePivotSubsystem;
 import com.team6647.subsystems.IndexerSubsystem.IndexerState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.Constants.OperatorConstants;
@@ -28,7 +28,7 @@ public class RobotContainer extends SuperRobotContainer {
   /* Systems */
   private AndromedaSwerve andromedaSwerve;
   private AutoDriveSubsystem autoDriveSubsystem;
-  private PivotCubeSubsystem cubeintakeSubsystem;
+  private IntakePivotSubsystem cubeintakeSubsystem;
   private IntakeSubsystem intakeSubsystem;
   private IndexerSubsystem indexerSubsystem;
   // private ElevatorSubsystem elevatorSubsystem;
@@ -54,7 +54,7 @@ public class RobotContainer extends SuperRobotContainer {
 
     autoDriveSubsystem = AutoDriveSubsystem.getInstance(andromedaSwerve);
     intakeSubsystem = IntakeSubsystem.getInstance();
-    cubeintakeSubsystem = PivotCubeSubsystem.getInstance();
+    cubeintakeSubsystem = IntakePivotSubsystem.getInstance();
     indexerSubsystem = IndexerSubsystem.getInstance();
     // elevatorSubsystem = ElevatorSubsystem.getInstance();
   }
@@ -69,15 +69,15 @@ public class RobotContainer extends SuperRobotContainer {
             () -> -OperatorConstants.driverController1.getRightX(),
             () -> OperatorConstants.driverController1.leftStick().getAsBoolean()));
 
-    OperatorConstants.driverController1.leftTrigger()
+    OperatorConstants.driverController2.leftTrigger()
         .whileTrue(
             new IntakePieceSequence(intakeSubsystem, indexerSubsystem, RollerState.COLLECTING, IndexerState.INDEXING));
 
-    OperatorConstants.driverController1.rightTrigger()
+    OperatorConstants.driverController2.rightTrigger()
         .whileTrue(
             new IntakePieceSequence(intakeSubsystem, indexerSubsystem, RollerState.SPITTING, IndexerState.SPITTING));
 
-    OperatorConstants.driverController1.x().whileTrue(new ToggleIntake(cubeintakeSubsystem));
+    OperatorConstants.driverController2.x().whileTrue(new ToggleIntake(cubeintakeSubsystem));
 
     // OperatorConstants.driverController2.a().whileTrue(new InstantCommand(() ->
     // elevatorSubsystem.changeElevatorState(ElevatorState.MAX)));
