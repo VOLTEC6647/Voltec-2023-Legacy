@@ -13,20 +13,20 @@ import com.team6647.util.Constants.ConeIntakeConstants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ConeIntakeSubsystem extends SubsystemBase {
-  private static ConeIntakeSubsystem instance;
+public class ArmIntakeSubsytem extends SubsystemBase {
+  private static ArmIntakeSubsytem instance;
 
   private SuperTalonFX intakeMotor = new SuperTalonFX(ConeIntakeConstants.intakeMotorID, GlobalIdleMode.Coast, false);
 
   private RollerState mState = RollerState.STOPPED;
 
   /** Creates a new ConeIntakeSubsystem. */
-  private ConeIntakeSubsystem() {
+  private ArmIntakeSubsytem() {
   }
 
-  public static ConeIntakeSubsystem getInstance() {
+  public static ArmIntakeSubsytem getInstance() {
     if (instance == null) {
-      instance = new ConeIntakeSubsystem();
+      instance = new ArmIntakeSubsytem();
     }
     return instance;
   }
