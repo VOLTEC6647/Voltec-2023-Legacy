@@ -24,7 +24,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   /** Creates a new IntakeSubsystem. */
   private IntakeSubsystem() {
-    intakeRollerTable = NetworkTableInstance.getDefault().getTable("IntakeRollerTable");
+    intakeRollerTable = NetworkTableInstance.getDefault().getTable("IntakeTable/Roller");
     intakeRollerPublisher = intakeRollerTable.getStringTopic("IntakeRollerState").publish();
   }
 

@@ -47,7 +47,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
     mPivotState = PivotState.HOMED;
 
-    intakePivotTable  = NetworkTableInstance.getDefault().getTable("IntakePivotTable");
+    intakePivotTable  = NetworkTableInstance.getDefault().getTable("IntakeTable/Pivot");
     pivotStatePublisher = intakePivotTable.getStringTopic("PivotState").publish();
     pivotPositionPublisher = intakePivotTable.getDoubleTopic("PivotPosition").publish();
     pivotPIDPublisher = intakePivotTable.getDoubleTopic("PivotPIDValue").publish();
