@@ -45,5 +45,44 @@
         }
       }
     }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "transitory": {
+      "AndromedaSwerveTable": {
+        "SwerveModule": {
+          "0": {
+            "open": true
+          },
+          "1": {
+            "open": true
+          },
+          "2": {
+            "open": true
+          },
+          "3": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    }
   }
 }
