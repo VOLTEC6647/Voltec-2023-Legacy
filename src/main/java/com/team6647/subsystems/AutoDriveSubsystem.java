@@ -16,10 +16,10 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import com.team6647.commands.hybrid.Intake.IntakePieceSequence;
 import com.team6647.commands.hybrid.Intake.ToggleIntake;
 import com.team6647.subsystems.IndexerSubsystem.IndexerState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
+import com.team6647.util.AutoUtils;
 import com.team6647.util.Constants.DriveConstants;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -55,18 +55,18 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
     field = new Field2d();
 
-    this.poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, swerve.getAngle(),
+    this.poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.swerveKinematics, swerve.getSwerveAngle(),
         swerve.getPositions(), new Pose2d());
 
     resetOdometry(new Pose2d());
 
-    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(PivotCubeSubsystem.getInstance()));
+    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
     DriveConstants.eventMap.put("moveIntake",
-        new IntakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
+        AutoUtils.intakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
             RollerState.COLLECTING, IndexerState.INDEXING));
-    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(PivotCubeSubsystem.getInstance()));
+    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
     DriveConstants.eventMap.put("throwIntake",
-        new IntakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
+        AutoUtils.intakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
             RollerState.SPITTING, IndexerState.SPITTING).withTimeout(1.5));
 
     this.alliance = DriverStation.getAlliance();
@@ -82,7 +82,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    poseEstimator.update(swerve.getAngle(), swerve.getPositions());
+    poseEstimator.update(swerve.getSwerveAngle(), swerve.getPositions());
     computeVisionMeasurements();
 
     field.setRobotPose(getPose());
@@ -103,7 +103,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * {@link SwerveDrivePoseEstimator}
    */
   public void computeVisionMeasurements() {
-
+/* 
     LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
     if (!(result.botpose[0] == 0 && result.botpose[1] == 0) &&
@@ -119,7 +119,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
             Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
                 (result.latency_pipeline / 1000.0));
       }
-    }
+    } */
 
   }
 
@@ -138,7 +138,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * @param pose New Pose2D
    */
   public void resetOdometry(Pose2d pose) {
-    poseEstimator.resetPosition(swerve.getAngle(), swerve.getPositions(), pose);
+    poseEstimator.resetPosition(swerve.getSwerveAngle(), swerve.getPositions(), pose);
   }
 
   /**

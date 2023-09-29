@@ -8,10 +8,15 @@ import com.andromedalib.motorControllers.SuperSparkMax;
 import com.andromedalib.motorControllers.IdleManager.GlobalIdleMode;
 import com.team6647.util.Constants.IntakeConstants;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
   private static IntakeSubsystem instance;
+  private static NetworkTable intakeRollerTable;
+  private static StringPublisher intakeRollerPublisher;
 
   private SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast, true, 80);
 
@@ -19,6 +24,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   /** Creates a new IntakeSubsystem. */
   private IntakeSubsystem() {
+    intakeRollerTable = NetworkTableInstance.getDefault().getTable("IntakeRollerTable");
+    intakeRollerPublisher = intakeRollerTable.getStringTopic("IntakeRollerState").publish();
   }
 
   public static IntakeSubsystem getInstance() {
@@ -34,6 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateNT();
   }
 
   public void changeRollerState(RollerState rollerState) {
@@ -58,7 +66,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   /* Telemetry */
-  public RollerState getRollerState() {
-    return mState;
+  private void updateNT() {
+    intakeRollerPublisher.set(mState.toString());
   }
 }
