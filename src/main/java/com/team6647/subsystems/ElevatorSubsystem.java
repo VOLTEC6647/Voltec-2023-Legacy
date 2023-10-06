@@ -13,13 +13,25 @@ import com.team6647.util.Constants.ElevatorConstants;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.BooleanEntry;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.DoubleEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
   private static ElevatorSubsystem instance;
+  private static NetworkTable elevatorTable;
+  private static StringEntry elevatorStateEntry;
+  private static DoubleEntry elevatorPositionEntry;
+  private static DoubleEntry elevatorPIDEntry;
+  private static DoubleEntry elevatorSetpointEntry;
+  private static BooleanEntry elevatorLimitSwitchEntry;
+  private static BooleanPublisher elevatorPIDEnabledEntry;
 
   private static SuperSparkMax leftMotor = new SuperSparkMax(ElevatorConstants.leftMotorID, GlobalIdleMode.Coast, true,
       80);
@@ -33,7 +45,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.elevatorSwitchID);
 
   private double setPoint = 0;
-  private ElevatorState mState;
+  private double pidVal = 0;
+  private ElevatorState mState = ElevatorState.HOMED;
 
   private boolean pidEnabled;
 
@@ -48,7 +61,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     rightMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
-    mState = ElevatorState.STATIC;
+    elevatorTable = NetworkTableInstance.getDefault().getTable("ElevatorTable");
+    elevatorStateEntry = elevatorTable.getStringTopic("ElevatorState").getEntry(getElevatorState().toString());
+    elevatorPositionEntry = elevatorTable.getDoubleTopic("ElevatorPosition").getEntry(getElevatorPosition());
+    elevatorPIDEntry = elevatorTable.getDoubleTopic("ElevatorPID").getEntry(getPIDValue());
+    elevatorSetpointEntry = elevatorTable.getDoubleTopic("ElevatorSetpoint").getEntry(getSetpoint());
+    elevatorLimitSwitchEntry = elevatorTable.getBooleanTopic("ElevatorLimitSwitch").getEntry(getLimitState());
+    elevatorPIDEnabledEntry = elevatorTable.getBooleanTopic("ElevatorPIDEnabled").getEntry(getPIDEnabled());
   }
 
   public static ElevatorSubsystem getInstance() {
@@ -63,29 +82,43 @@ public class ElevatorSubsystem extends SubsystemBase {
     if (pidEnabled) {
       moveElevator();
     }
+    updateNT();
   }
 
   public enum ElevatorState {
-    STATIC, BOTTOM, MID, MAX,
+    HOMED, BOTTOM, MID, MAX, HUMAN_PLAYER
   }
 
+  /**
+   * Changes the elevator state
+   * 
+   * @param newState the new state
+   */
   public void changeElevatorState(ElevatorState newState) {
     switch (newState) {
-      case STATIC:
-        changeSetpoint(setPoint);
+      case HOMED:
+        changeSetpoint(ElevatorConstants.elevatorHomedPosition);
         break;
       case BOTTOM:
-        changeSetpoint(setPoint);
+        changeSetpoint(ElevatorConstants.elevatorBottomPosition);
         break;
       case MID:
-        changeSetpoint(setPoint);
+        changeSetpoint(ElevatorConstants.elevatorMiddlePosition);
         break;
       case MAX:
-        changeSetpoint(10);
+        changeSetpoint(ElevatorConstants.elevatorTopPosition);
+        break;
+      case HUMAN_PLAYER:
+        changeSetpoint(ElevatorConstants.elevatorHumanPlayerPosition);
         break;
     }
   }
 
+  /**
+   * Security method to prevent the elevator from going over its limits
+   * 
+   * @param newValue the new setpoint
+   */
   private void changeSetpoint(double newValue) {
     if (newValue < ElevatorConstants.minElevatorSoftLimit || newValue > ElevatorConstants.maxElevatorSoftLimit) {
       newValue = Functions.clamp(newValue, ElevatorConstants.minElevatorSoftLimit,
@@ -94,12 +127,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     setPoint = newValue;
   }
 
+  /**
+   * Moves the elevator to the setpoint
+   * using the PID controller
+   */
   private void moveElevator() {
     double pidValue = elevatorController.calculate(getElevatorPosition(), setPoint);
 
     pidValue = Functions.clamp(pidValue, -0.4, 0.4);
-
-    SmartDashboard.putNumber("PID VALUE ELVATOR", pidValue);
+    pidVal = pidValue;
 
     double total = pidValue * 12;
 
@@ -107,26 +143,70 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightMotor.setVoltage(total);
   }
 
+  /**
+   * Enalbes the PID Controller
+   */
   public void enablePID() {
     pidEnabled = true;
   }
 
+  /**
+   * Disables the PID controller
+   */
   public void disablePID() {
     pidEnabled = false;
   }
 
+  /**
+   * Gets the current PID enabled state
+   * 
+   * @return true if PID is enabled, false if not
+   */
+  public boolean getPIDEnabled() {
+    return pidEnabled;
+  }
+
+  /**
+   * Manually moves the elevator
+   * 
+   * @param speed
+   */
   public void moveElevator(double speed) {
+    if (getPIDEnabled())
+      return;
+
+    if (elevatorHomed(speed))
+      return;
+
     leftMotor.set(speed);
     rightMotor.set(speed);
   }
 
   /**
-   * Gets the current limit switch stat
+   * Stops the elevator on touching the limit switch
    * 
-   * @return Limit switch state
+   * @param speed
+   * @return
    */
-  public boolean getLimitSwitch() {
-    return limitSwitch.get();
+  public boolean elevatorHomed(double speed) {
+    if (speed > 0 && getLimitState()) {
+      return false;
+    }
+    return getLimitState();
+  }
+
+  /* Telemetry */
+
+  /**
+   * Updates al NetworkTable values
+   */
+  private void updateNT() {
+    elevatorStateEntry.set(getElevatorState().toString());
+    elevatorPositionEntry.set(getElevatorPosition());
+    elevatorPIDEntry.set(getPIDValue());
+    elevatorSetpointEntry.set(getSetpoint());
+    elevatorLimitSwitchEntry.set(getLimitState());
+    elevatorPIDEnabledEntry.set(getPIDEnabled());
   }
 
   /**
@@ -159,7 +239,25 @@ public class ElevatorSubsystem extends SubsystemBase {
    * 
    * @return Current elevator state
    */
-  public ElevatorState getElevatorState() {
+  private ElevatorState getElevatorState() {
     return mState;
+  }
+
+  /**
+   * Gets the current PID value
+   * 
+   * @return Current PID value
+   */
+  private double getPIDValue() {
+    return pidVal;
+  }
+
+  /**
+   * Gets the current setpoint
+   * 
+   * @return Current setpoint
+   */
+  private double getSetpoint() {
+    return setPoint;
   }
 }
