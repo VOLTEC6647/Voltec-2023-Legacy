@@ -45,17 +45,19 @@ public class IndexerSubsystem extends SubsystemBase {
   }
 
   public void changeIndexerState(IndexerState newState) {
+    if (newState == mState)
+      return;
+
+    mState = newState;
+    
     switch (newState) {
       case STOPPED:
-        mState = IndexerState.STOPPED;
         setIndexer(0);
         break;
       case INDEXING:
-        mState = IndexerState.INDEXING;
         setIndexer(IndexerConstants.indexerSpeed);
         break;
       case SPITTING:
-        mState = IndexerState.SPITTING;
         setIndexer(-IndexerConstants.indexerSpeed);
         break;
     }

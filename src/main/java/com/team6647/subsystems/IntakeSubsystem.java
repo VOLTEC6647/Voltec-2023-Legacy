@@ -44,18 +44,20 @@ public class IntakeSubsystem extends SubsystemBase {
     updateNT();
   }
 
-  public void changeRollerState(RollerState rollerState) {
-    switch (rollerState) {
+  public void changeRollerState(RollerState newState) {
+    if (newState == mState)
+      return;
+
+    mState = newState;
+    
+    switch (newState) {
       case STOPPED:
-        mState = RollerState.STOPPED;
         setIntakeSpeed(0);
         break;
       case COLLECTING:
-        mState = RollerState.COLLECTING;
         setIntakeSpeed(IntakeConstants.intakeSpeed);
         break;
       case SPITTING:
-        mState = RollerState.SPITTING;
         setIntakeSpeed(-IntakeConstants.intakeSpeed);
         break;
     }

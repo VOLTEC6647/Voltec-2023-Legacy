@@ -99,13 +99,13 @@ public class IntakePivotSubsystem extends SubsystemBase {
     if (newState == mPivotState)
       return;
 
+    mPivotState = newState;
+
     switch (newState) {
       case HOMED:
-        mPivotState = newState;
         changeSetpoint(IntakeConstants.intakeHomedPosition);
         break;
       case EXTENDED:
-        mPivotState = newState;
         changeSetpoint(IntakeConstants.intakeExtendedPosition);
         break;
     }
