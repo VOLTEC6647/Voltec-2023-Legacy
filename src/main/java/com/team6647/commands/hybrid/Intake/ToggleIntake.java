@@ -10,6 +10,9 @@ import com.team6647.subsystems.IntakePivotSubsystem.PivotState;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
+/**
+ * Toggles the intake pivot between extended and homed.
+ */
 public class ToggleIntake extends InstantCommand {
   private IntakePivotSubsystem cubeintakeSubsystem;
 

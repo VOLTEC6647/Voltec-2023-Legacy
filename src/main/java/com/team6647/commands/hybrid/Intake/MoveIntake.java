@@ -10,6 +10,9 @@ import com.team6647.subsystems.IntakeSubsystem.RollerState;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Moves the intake roller to a specified state.
+ */
 public class MoveIntake extends CommandBase {
   private IntakeSubsystem intakeSubsystem;
   private RollerState rollerState;
