@@ -17,7 +17,7 @@ import com.team6647.subsystems.ElevatorSubsystem;
 import com.team6647.subsystems.IndexerSubsystem;
 import com.team6647.subsystems.IntakePivotSubsystem;
 import com.team6647.subsystems.IntakeSubsystem;
-import com.team6647.subsystems.ElevatorSubsystem.ElevatorState;
+import com.team6647.subsystems.ElevatorSubsystem.ElevatorPositionState;
 import com.team6647.subsystems.IndexerSubsystem.IndexerState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.AutoUtils;
@@ -95,10 +95,10 @@ public class RobotContainer extends SuperRobotContainer {
 
     OperatorConstants.driverController2.x().whileTrue(new ToggleIntake(cubeintakeSubsystem));
 
-    OperatorConstants.driverController2.a().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorState.BOTTOM));
-    OperatorConstants.driverController2.y().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorState.MID));
-    OperatorConstants.driverController2.b().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorState.MAX));
-    OperatorConstants.driverController2.leftStick().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorState.HOMED));
+    OperatorConstants.driverController2.a().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.BOTTOM));
+    OperatorConstants.driverController2.y().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MID));
+    OperatorConstants.driverController2.b().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MAX));
+    OperatorConstants.driverController2.leftStick().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
 
 
   }
