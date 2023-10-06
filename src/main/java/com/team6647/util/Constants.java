@@ -52,6 +52,12 @@ public class Constants {
                 public static final float minElevatorSoftLimit = 0; // TODO SET
                 public static final float maxElevatorSoftLimit = 100; // TODO SET
 
+                public static final double elevatorHomedPosition = 0; // TODO SET
+                public static final double elevatorBottomPosition = 0; // TODO SET
+                public static final double elevatorMiddlePosition = 0; // TODO SET
+                public static final double elevatorTopPosition = 0; // TODO SET
+                public static final double elevatorHumanPlayerPosition = 0; // TODO SET
+
         }
 
         public static class ConeIntakeConstants {
