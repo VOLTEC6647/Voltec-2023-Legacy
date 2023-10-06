@@ -66,6 +66,26 @@
             "open": true
           },
           "open": true
+        }
+      },
+      "ArmTable": {
+        "Intake": {
+          "open": true
+        },
+        "Pivot": {
+          "open": true
+        },
+        "open": true
+      },
+      "ElevatorTable": {
+        "open": true
+      },
+      "IntakeTable": {
+        "Pivot": {
+          "open": true
+        },
+        "Roller": {
+          "open": true
         },
         "open": true
       }

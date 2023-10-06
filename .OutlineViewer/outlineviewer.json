@@ -1,0 +1,32 @@
+{
+  "Connections": {
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "localhost"
+  },
+  "Persistent Values": {
+    "open": false
+  },
+  "transitory": {
+    "AndromedaSwerveTable": {
+      "open": true
+    },
+    "ArmTable": {
+      "open": true
+    },
+    "ElevatorTable": {
+      "open": true
+    },
+    "FMSInfo": {
+      "open": true
+    },
+    "IndexerTable": {
+      "open": true
+    },
+    "IntakeTable": {
+      "open": true
+    }
+  }
+}
