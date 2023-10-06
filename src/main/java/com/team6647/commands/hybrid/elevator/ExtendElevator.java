@@ -1,19 +1,18 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
+/**
+ * Written by Juan Pablo Gutierrez
+ */
 package com.team6647.commands.hybrid.elevator;
 
 import com.team6647.subsystems.ElevatorSubsystem;
-import com.team6647.subsystems.ElevatorSubsystem.ElevatorState;
+import com.team6647.subsystems.ElevatorSubsystem.ElevatorPositionState;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ExtendElevator extends CommandBase {
   private ElevatorSubsystem elevatorSubsystem;
-  private ElevatorState elevatorState;
+  private ElevatorPositionState elevatorState;
 
-  public ExtendElevator(ElevatorSubsystem elevatorSubsystem, ElevatorState elevatorState) {
+  public ExtendElevator(ElevatorSubsystem elevatorSubsystem, ElevatorPositionState elevatorState) {
     this.elevatorSubsystem = elevatorSubsystem;
     this.elevatorState = elevatorState;
 
@@ -22,6 +21,6 @@ public class ExtendElevator extends CommandBase {
 
   @Override
   public void initialize() {
-    elevatorSubsystem.changeElevatorState(elevatorState);
+    elevatorSubsystem.changeElevatorPositionState(elevatorState);
   }
 }
