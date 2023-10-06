@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
-
 public class Constants {
 
         public static class OperatorConstants {
@@ -21,7 +20,6 @@ public class Constants {
                                 OperatorConstants.kDriverControllerPort);
                 public static final CommandXboxController driverController2 = new CommandXboxController(
                                 OperatorConstants.kDriverControllerPort2);
-
         }
 
         public static class ShuffleboardConstants {
@@ -47,7 +45,6 @@ public class Constants {
                 public static final double elevatorKd = 0;
 
                 public static final int elevatorSwitchID = 1;
-                public static final int beamBrakePort = 2;
 
                 public static final float minElevatorSoftLimit = 0; // TODO SET
                 public static final float maxElevatorSoftLimit = 100; // TODO SET
@@ -60,7 +57,7 @@ public class Constants {
 
         }
 
-        public static class ConeIntakeConstants {
+        public static class ArmIntakeConstants {
                 public static final int leftPivotMotorID = 18;
                 public static final int rightPivotMotorID = 19;
                 public static final int intakeMotorID = 20;
@@ -70,6 +67,14 @@ public class Constants {
                 public static final double pivotKd = 0.0;
 
                 public static final double intakeSpeed = 0.3;
+                public static final int beamBrakePort = 2;
+
+                public static final double intakeHomedPosition = 0; // TODO SET
+                public static final double intakeFloorPosition = 0; // TODO SET
+                public static final double intakePlacingPositon = 0; // TODO SET
+                public static final double intakeScoringPositon = 0; // TODO SET
+
+
         }
 
         public static class IntakeConstants {
@@ -80,11 +85,11 @@ public class Constants {
                 public static final double intakeKi = 0.0;
                 public static final double intakeKd = 0.0;
 
-                public static final double minIntakePosition = 8; //TODO SET
-                public static final double maxIntakePosition = 90; //TODO SET
+                public static final double minIntakePosition = 8; // TODO SET
+                public static final double maxIntakePosition = 90; // TODO SET
 
-                public static final double intakeHomedPosition = 32; //TODO SET
-                public static final double intakeExtendedPosition = 65; //TODO SET
+                public static final double intakeHomedPosition = 32; // TODO SET
+                public static final double intakeExtendedPosition = 65; // TODO SET
 
                 public static final double pivotPositionConversionFactor = 100;
                 public static final double pivotZeroOffset = 90.0467753; // TODO SET
