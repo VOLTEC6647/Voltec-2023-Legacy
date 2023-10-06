@@ -6,9 +6,9 @@ package com.team6647.commands.hybrid.elevator;
 import com.team6647.subsystems.ElevatorSubsystem;
 import com.team6647.subsystems.ElevatorSubsystem.ElevatorPositionState;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class ExtendElevator extends CommandBase {
+public class ExtendElevator extends InstantCommand {
   private ElevatorSubsystem elevatorSubsystem;
   private ElevatorPositionState elevatorState;
 
