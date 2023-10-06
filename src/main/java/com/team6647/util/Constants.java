@@ -46,7 +46,8 @@ public class Constants {
                 public static final double elevatorKi = 0;
                 public static final double elevatorKd = 0;
 
-                public static final int elevatorSwitchID = 0;
+                public static final int elevatorSwitchID = 1;
+                public static final int beamBrakePort = 2;
 
                 public static final float minElevatorSoftLimit = 0; // TODO SET
                 public static final float maxElevatorSoftLimit = 100; // TODO SET
@@ -69,20 +70,22 @@ public class Constants {
                 public static final int pivotIntakeID = 13;
                 public static final int intakeMotorID = 14;
 
-                public static final double intakeKp = 0.045; // 0.059 //0.05
-                public static final double intakeKi = 0;// 0.0001;
-                public static final double intakeKd = 0.0;// 1.3;
+                public static final double intakeKp = 0.045; // TODO SET
+                public static final double intakeKi = 0.0;
+                public static final double intakeKd = 0.0;
 
-                public static final double minIntakePosition = 8;
-                public static final double maxIntakePosition = 90;
+                public static final double minIntakePosition = 8; //TODO SET
+                public static final double maxIntakePosition = 90; //TODO SET
 
-                public static final double intakeHomedPosition = 32;
-                public static final double intakeExtendedPosition = 65;
+                public static final double intakeHomedPosition = 32; //TODO SET
+                public static final double intakeExtendedPosition = 65; //TODO SET
 
                 public static final double pivotPositionConversionFactor = 100;
-                public static final double pivotZeroOffset = 90.0467753;
+                public static final double pivotZeroOffset = 90.0467753; // TODO SET
 
                 public static final double intakeSpeed = 0.7;
+
+                public static final int beamBrakePort = 0;
         }
 
         public static class IndexerConstants {

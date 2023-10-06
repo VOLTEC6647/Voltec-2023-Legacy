@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakePivotSubsystem extends SubsystemBase {
@@ -37,6 +38,8 @@ public class IntakePivotSubsystem extends SubsystemBase {
   private static ProfiledPIDController pivotController = new ProfiledPIDController(IntakeConstants.intakeKp,
       IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(60, 55));
 
+  private static DigitalInput intakeBeamBrake = new DigitalInput(IntakeConstants.beamBrakePort);
+
   private double setpoint = IntakeConstants.intakeHomedPosition;
   private PivotState mPivotState;
 
@@ -47,7 +50,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
     mPivotState = PivotState.HOMED;
 
-    intakePivotTable  = NetworkTableInstance.getDefault().getTable("IntakeTable/Pivot");
+    intakePivotTable = NetworkTableInstance.getDefault().getTable("IntakeTable/Pivot");
     pivotStatePublisher = intakePivotTable.getStringTopic("PivotState").publish();
     pivotPositionPublisher = intakePivotTable.getDoubleTopic("PivotPosition").publish();
     pivotPIDPublisher = intakePivotTable.getDoubleTopic("PivotPIDValue").publish();
@@ -73,6 +76,9 @@ public class IntakePivotSubsystem extends SubsystemBase {
     HOMED, EXTENDED,
   }
 
+  /**
+   * Calculates the current PID value and applies it to the motor
+   */
   private void calculatePID() {
     double pidValue = pivotController.calculate(getPivotPosition(), setpoint);
 
@@ -84,6 +90,11 @@ public class IntakePivotSubsystem extends SubsystemBase {
     pivotMotor.setVoltage(total);
   }
 
+  /**
+   * Changes the current pivot state
+   * 
+   * @param newState New {@link PivotState} for the intake
+   */
   public void changePivotState(PivotState newState) {
     if (newState == mPivotState)
       return;
@@ -100,6 +111,12 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
   }
 
+  /**
+   * Security function for chaning the setpoint. Always change the setpoint using
+   * this method.
+   * 
+   * @param newSetpoint New setpoint
+   */
   private void changeSetpoint(double newSetpoint) {
     if (newSetpoint < IntakeConstants.minIntakePosition || newSetpoint > IntakeConstants.maxIntakePosition) {
       newSetpoint = Functions.clamp(newSetpoint, IntakeConstants.minIntakePosition, IntakeConstants.maxIntakePosition);
@@ -108,6 +125,9 @@ public class IntakePivotSubsystem extends SubsystemBase {
     setpoint = newSetpoint;
   }
 
+  /**
+   * Resets the PID Values
+   */
   public void resetPID() {
     pivotController.reset(getPivotPosition());
   }
@@ -121,20 +141,50 @@ public class IntakePivotSubsystem extends SubsystemBase {
     pivotSetpointPublisher.set(getSetpoint());
   }
 
-  public double getPivotPosition() {
+  /**
+   * Gets the current pivot position
+   * 
+   * @return Current pivot position
+   */
+  private double getPivotPosition() {
     return pivotEncoder.getPosition();
   }
 
+  /**
+   * Gets the current {@link PivotState}
+   * 
+   * @return Current pivot state
+   */
   public PivotState getPivotState() {
     return mPivotState;
   }
 
+  /**
+   * Gets the current beam break value
+   * 
+   * @return Beam break value
+   */
+  public boolean getBeamBrake() {
+    return intakeBeamBrake.get();
+  }
+
   /* Debug Telemetry */
-  public double getPIDValue() {
+
+  /**
+   * Gets the current calculated PID Value
+   * 
+   * @return PID Value
+   */
+  private double getPIDValue() {
     return pidVal;
   }
 
-  public double getSetpoint() {
+  /**
+   * Gets the current pivot setpoint
+   * 
+   * @return Pivot setpoint
+   */
+  private double getSetpoint() {
     return setpoint;
   }
 
