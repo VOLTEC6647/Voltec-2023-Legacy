@@ -103,7 +103,6 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * {@link SwerveDrivePoseEstimator}
    */
   public void computeVisionMeasurements() {
-/* 
     LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
     if (!(result.botpose[0] == 0 && result.botpose[1] == 0) &&
@@ -119,8 +118,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
             Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
                 (result.latency_pipeline / 1000.0));
       }
-    } */
-
+    }
   }
 
   /**
