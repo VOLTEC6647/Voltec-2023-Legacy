@@ -14,10 +14,10 @@ import com.team6647.util.Constants.IntakeConstants;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,10 +25,10 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
   private static IntakePivotSubsystem instance;
   private static NetworkTable intakePivotTable;
-  private static StringPublisher pivotStatePublisher;
-  private static DoublePublisher pivotPositionPublisher;
-  private static DoublePublisher pivotPIDPublisher;
-  private static DoublePublisher pivotSetpointPublisher;
+  private static StringEntry pivotStatePublisher;
+  private static DoubleEntry pivotPositionPublisher;
+  private static DoubleEntry pivotPIDPublisher;
+  private static DoubleEntry pivotSetpointPublisher;
 
   private static SuperSparkMax pivotMotor = new SuperSparkMax(IntakeConstants.pivotIntakeID, GlobalIdleMode.brake,
       false, 80, IntakeConstants.pivotPositionConversionFactor, IntakeConstants.pivotZeroOffset, true);
@@ -51,10 +51,10 @@ public class IntakePivotSubsystem extends SubsystemBase {
     mPivotState = PivotState.HOMED;
 
     intakePivotTable = NetworkTableInstance.getDefault().getTable("IntakeTable/Pivot");
-    pivotStatePublisher = intakePivotTable.getStringTopic("PivotState").publish();
-    pivotPositionPublisher = intakePivotTable.getDoubleTopic("PivotPosition").publish();
-    pivotPIDPublisher = intakePivotTable.getDoubleTopic("PivotPIDValue").publish();
-    pivotSetpointPublisher = intakePivotTable.getDoubleTopic("PivotSetpoint").publish();
+    pivotStatePublisher = intakePivotTable.getStringTopic("PivotState").getEntry(getPivotState().toString());
+    pivotPositionPublisher = intakePivotTable.getDoubleTopic("PivotPosition").getEntry(getPivotPosition());
+    pivotPIDPublisher = intakePivotTable.getDoubleTopic("PivotPIDValue").getEntry(getPIDValue());
+    pivotSetpointPublisher = intakePivotTable.getDoubleTopic("PivotSetpoint").getEntry(getSetpoint());
 
     resetPID();
   }

@@ -11,13 +11,13 @@ import com.team6647.util.Constants.IndexerConstants;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IndexerSubsystem extends SubsystemBase {
   private static IndexerSubsystem instance;
   private static NetworkTable indexerTable;
-  private static StringPublisher indexerStatePublisher;
+  private static StringEntry indexerStatePublisher;
 
   private static SuperSparkMax indexerMotor = new SuperSparkMax(IndexerConstants.indexerMotorID, GlobalIdleMode.Coast,
       true, 80);
@@ -26,7 +26,7 @@ public class IndexerSubsystem extends SubsystemBase {
 
   private IndexerSubsystem() {
     indexerTable = NetworkTableInstance.getDefault().getTable("IndexerTable");
-    indexerStatePublisher = indexerTable.getStringTopic("IndexerState").publish();
+    indexerStatePublisher = indexerTable.getStringTopic("IndexerState").getEntry(getIndexerState().toString());
   }
 
   @Override
@@ -63,6 +63,10 @@ public class IndexerSubsystem extends SubsystemBase {
 
   private void setIndexer(double speed) {
     indexerMotor.set(speed);
+  }
+
+  private IndexerState getIndexerState() {
+    return mState;
   }
 
   /* Telemetry */
