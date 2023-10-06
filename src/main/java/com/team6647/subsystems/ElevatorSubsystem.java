@@ -43,11 +43,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private static DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.elevatorSwitchID);
 
-  private double setPoint = 0;
-  private double pidVal = 0;
+  private double setPoint = ElevatorConstants.minElevatorSoftLimit;
   private ElevatorPositionState mPositionState = ElevatorPositionState.HOMED;
   private ElevatorState mElevatorState = ElevatorState.PID;
-
+  
+  private double pidVal = 0;
+  
   private ElevatorSubsystem() {
     leftMotor.setSoftLimit(SoftLimitDirection.kForward, ElevatorConstants.minElevatorSoftLimit);
     leftMotor.setSoftLimit(SoftLimitDirection.kReverse, ElevatorConstants.maxElevatorSoftLimit);
@@ -58,6 +59,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightMotor.setSoftLimit(SoftLimitDirection.kReverse, ElevatorConstants.maxElevatorSoftLimit);
     rightMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
     rightMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
+    rightMotor.follow(leftMotor);
 
     elevatorTable = NetworkTableInstance.getDefault().getTable("ElevatorTable");
     elevatorPositionStateEntry = elevatorTable.getStringTopic("ElevatorPositionState")
@@ -160,7 +163,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double total = pidValue * 12;
 
     leftMotor.setVoltage(total);
-    rightMotor.setVoltage(total);
+    //rightMotor.setVoltage(total);
   }
 
   /**
@@ -200,10 +203,10 @@ public class ElevatorSubsystem extends SubsystemBase {
   private void updateNT() {
     elevatorPositionStateEntry.set(getElevatorState().toString());
     elevatorPositionEntry.set(getElevatorPosition());
+    elevatorPIDStateEntry.set(getElevatorState().toString());
     elevatorPIDEntry.set(getPIDValue());
     elevatorSetpointEntry.set(getSetpoint());
     elevatorLimitSwitchEntry.set(getLimitState());
-    elevatorPIDStateEntry.set(getElevatorState().toString());
   }
 
   /**

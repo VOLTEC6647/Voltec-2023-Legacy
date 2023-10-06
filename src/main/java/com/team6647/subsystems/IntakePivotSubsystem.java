@@ -18,7 +18,6 @@ import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakePivotSubsystem extends SubsystemBase {
@@ -38,17 +37,13 @@ public class IntakePivotSubsystem extends SubsystemBase {
   private static ProfiledPIDController pivotController = new ProfiledPIDController(IntakeConstants.intakeKp,
       IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(60, 55));
 
-  private static DigitalInput intakeBeamBrake = new DigitalInput(IntakeConstants.beamBrakePort);
-
   private double setpoint = IntakeConstants.intakeHomedPosition;
-  private PivotState mPivotState;
+  private PivotState mPivotState = PivotState.HOMED;
 
   double pidVal;
 
   private IntakePivotSubsystem() {
     pivotEncoder = pivotMotor.getAbsoluteEncoder(Type.kDutyCycle);
-
-    mPivotState = PivotState.HOMED;
 
     intakePivotTable = NetworkTableInstance.getDefault().getTable("IntakeTable/Pivot");
     pivotStatePublisher = intakePivotTable.getStringTopic("PivotState").getEntry(getPivotState().toString());
@@ -157,15 +152,6 @@ public class IntakePivotSubsystem extends SubsystemBase {
    */
   public PivotState getPivotState() {
     return mPivotState;
-  }
-
-  /**
-   * Gets the current beam break value
-   * 
-   * @return Beam break value
-   */
-  public boolean getBeamBrake() {
-    return intakeBeamBrake.get();
   }
 
   /* Debug Telemetry */

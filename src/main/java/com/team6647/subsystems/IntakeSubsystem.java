@@ -11,21 +11,24 @@ import com.team6647.util.Constants.IntakeConstants;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
   private static IntakeSubsystem instance;
   private static NetworkTable intakeRollerTable;
-  private static StringEntry intakeRollerPublisher;
+  private static StringEntry intakeRollerStateEntry;
 
   private SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast, true, 80);
 
   private RollerState mState = RollerState.STOPPED;
 
+  private static DigitalInput intakeBeamBrake = new DigitalInput(IntakeConstants.beamBrakePort);
+
   /** Creates a new IntakeSubsystem. */
   private IntakeSubsystem() {
     intakeRollerTable = NetworkTableInstance.getDefault().getTable("IntakeTable/Roller");
-    intakeRollerPublisher = intakeRollerTable.getStringTopic("IntakeRollerState").getEntry(getRollerState().toString());
+    intakeRollerStateEntry = intakeRollerTable.getStringTopic("IntakeRollerState").getEntry(getRollerState().toString());
   }
 
   public static IntakeSubsystem getInstance() {
@@ -49,7 +52,7 @@ public class IntakeSubsystem extends SubsystemBase {
       return;
 
     mState = newState;
-    
+
     switch (newState) {
       case STOPPED:
         setIntakeSpeed(0);
@@ -67,12 +70,21 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor.set(speed);
   }
 
+  /* Telemetry */
+  private void updateNT() {
+    intakeRollerStateEntry.set(getRollerState().toString());
+  }
+
   public RollerState getRollerState() {
     return mState;
   }
 
-  /* Telemetry */
-  private void updateNT() {
-    intakeRollerPublisher.set(mState.toString());
+  /**
+   * Gets the current beam break value
+   * 
+   * @return Beam break value
+   */
+  public boolean getBeamBrake() {
+    return intakeBeamBrake.get();
   }
 }
