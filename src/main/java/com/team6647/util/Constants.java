@@ -73,6 +73,8 @@ public class Constants {
                 public static final double intakeFloorPosition = 0; // TODO SET
                 public static final double intakePlacingPositon = 0; // TODO SET
                 public static final double intakeScoringPositon = 0; // TODO SET
+                public static final double intakeIndexingPosition = 0; // TODO SET
+                public static final double intakeHumanPlayerPosition = 0; // TODO SET
 
 
         }

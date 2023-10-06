@@ -201,7 +201,7 @@ public class ElevatorSubsystem extends SubsystemBase {
    * Updates al NetworkTable values
    */
   private void updateNT() {
-    elevatorPositionStateEntry.set(getElevatorState().toString());
+    elevatorPositionStateEntry.set(getElevatorPositionState().toString());
     elevatorPositionEntry.set(getElevatorPosition());
     elevatorPIDStateEntry.set(getElevatorState().toString());
     elevatorPIDEntry.set(getPIDValue());

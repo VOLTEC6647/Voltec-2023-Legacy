@@ -62,12 +62,10 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
     DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
     DriveConstants.eventMap.put("moveIntake",
-        AutoUtils.intakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
-            RollerState.COLLECTING, IndexerState.INDEXING));
+        AutoUtils.intakePieceSequence(RollerState.COLLECTING, IndexerState.INDEXING));
     DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
     DriveConstants.eventMap.put("throwIntake",
-        AutoUtils.intakePieceSequence(IntakeSubsystem.getInstance(), IndexerSubsystem.getInstance(),
-            RollerState.SPITTING, IndexerState.SPITTING).withTimeout(1.5));
+        AutoUtils.intakePieceSequence(RollerState.SPITTING, IndexerState.SPITTING).withTimeout(1.5));
 
     this.alliance = DriverStation.getAlliance();
 

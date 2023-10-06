@@ -11,12 +11,16 @@ import com.andromedalib.andromedaSwerve.utils.AndromedaProfileConfig;
 import com.andromedalib.andromedaSwerve.utils.AndromedaProfileConfig.AndromedaProfiles;
 import com.andromedalib.robot.SuperRobotContainer;
 import com.team6647.commands.hybrid.Intake.ToggleIntake;
+import com.team6647.commands.hybrid.arm.MoveArm;
 import com.team6647.commands.hybrid.elevator.ExtendElevator;
+import com.team6647.subsystems.ArmIntakeSubsytem;
+import com.team6647.subsystems.ArmPivotSubsystem;
 import com.team6647.subsystems.AutoDriveSubsystem;
 import com.team6647.subsystems.ElevatorSubsystem;
 import com.team6647.subsystems.IndexerSubsystem;
 import com.team6647.subsystems.IntakePivotSubsystem;
 import com.team6647.subsystems.IntakeSubsystem;
+import com.team6647.subsystems.ArmPivotSubsystem.ArmPivotState;
 import com.team6647.subsystems.ElevatorSubsystem.ElevatorPositionState;
 import com.team6647.subsystems.IndexerSubsystem.IndexerState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
@@ -35,6 +39,8 @@ public class RobotContainer extends SuperRobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private IndexerSubsystem indexerSubsystem;
   private ElevatorSubsystem elevatorSubsystem;
+  private ArmIntakeSubsytem armIntakeSubsystem;
+  private ArmPivotSubsystem armPivotSubsystem;
 
   private RobotContainer() {
   }
@@ -65,11 +71,13 @@ public class RobotContainer extends SuperRobotContainer {
     cubeintakeSubsystem = IntakePivotSubsystem.getInstance();
     indexerSubsystem = IndexerSubsystem.getInstance();
     elevatorSubsystem = ElevatorSubsystem.getInstance();
+    armIntakeSubsystem = ArmIntakeSubsytem.getInstance();
+    armPivotSubsystem = ArmPivotSubsystem.getInstance();
   }
 
   @Override
   public void configureBindings() {
-    
+
     /* Driver Controller 1 */
     andromedaSwerve.setDefaultCommand(
         new SwerveDriveCommand(
@@ -83,23 +91,26 @@ public class RobotContainer extends SuperRobotContainer {
 
     OperatorConstants.driverController2.leftTrigger()
         .whileTrue(
-            AutoUtils.intakePieceSequence(intakeSubsystem, indexerSubsystem,
+            AutoUtils.intakePieceSequence(
                 RollerState.COLLECTING,
-                IndexerState.INDEXING));
+                IndexerState.INDEXING))
+        .onFalse(new MoveArm(armPivotSubsystem, ArmPivotState.HOMED));
 
     OperatorConstants.driverController2.rightTrigger()
         .whileTrue(
-            AutoUtils.intakePieceSequence(intakeSubsystem, indexerSubsystem,
+            AutoUtils.intakePieceSequence(
                 RollerState.SPITTING,
-                IndexerState.SPITTING));
+                IndexerState.SPITTING))
+        .onFalse(new MoveArm(armPivotSubsystem, ArmPivotState.HOMED));
 
     OperatorConstants.driverController2.x().whileTrue(new ToggleIntake(cubeintakeSubsystem));
 
-    OperatorConstants.driverController2.a().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.BOTTOM));
+    OperatorConstants.driverController2.a()
+        .whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.BOTTOM));
     OperatorConstants.driverController2.y().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MID));
     OperatorConstants.driverController2.b().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MAX));
-    OperatorConstants.driverController2.leftStick().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
-
+    OperatorConstants.driverController2.leftStick()
+        .whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
 
   }
 

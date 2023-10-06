@@ -72,7 +72,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
   }
 
   public enum ArmPivotState {
-    HOMED, FLOOR, PLACING, SCORING
+    HOMED, FLOOR, PLACING, SCORING, INDEXING, HUMAN_PLAYER
   }
 
   private void calculatePID() {
@@ -104,6 +104,12 @@ public class ArmPivotSubsystem extends SubsystemBase {
         break;
       case SCORING:
         changeSetpoint(ArmIntakeConstants.intakeScoringPositon);
+        break;
+      case INDEXING:
+        changeSetpoint(ArmIntakeConstants.intakeIndexingPosition);
+        break;
+      case HUMAN_PLAYER:
+        changeSetpoint(ArmIntakeConstants.intakeHumanPlayerPosition);
         break;
     }
   }
