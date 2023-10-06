@@ -14,7 +14,6 @@ import com.team6647.util.Constants.ElevatorConstants;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.BooleanEntry;
-import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -26,12 +25,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private static ElevatorSubsystem instance;
   private static NetworkTable elevatorTable;
-  private static StringEntry elevatorStateEntry;
+  private static StringEntry elevatorPositionStateEntry;
+  private static StringEntry elevatorPIDStateEntry;
   private static DoubleEntry elevatorPositionEntry;
   private static DoubleEntry elevatorPIDEntry;
   private static DoubleEntry elevatorSetpointEntry;
   private static BooleanEntry elevatorLimitSwitchEntry;
-  private static BooleanPublisher elevatorPIDEnabledEntry;
 
   private static SuperSparkMax leftMotor = new SuperSparkMax(ElevatorConstants.leftMotorID, GlobalIdleMode.Coast, true,
       80);
@@ -46,9 +45,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private double setPoint = 0;
   private double pidVal = 0;
-  private ElevatorState mState = ElevatorState.HOMED;
-
-  private boolean pidEnabled;
+  private ElevatorPositionState mPositionState = ElevatorPositionState.HOMED;
+  private ElevatorState mElevatorState = ElevatorState.PID;
 
   private ElevatorSubsystem() {
     leftMotor.setSoftLimit(SoftLimitDirection.kForward, ElevatorConstants.minElevatorSoftLimit);
@@ -62,12 +60,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     rightMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
     elevatorTable = NetworkTableInstance.getDefault().getTable("ElevatorTable");
-    elevatorStateEntry = elevatorTable.getStringTopic("ElevatorState").getEntry(getElevatorState().toString());
+    elevatorPositionStateEntry = elevatorTable.getStringTopic("ElevatorPositionState")
+        .getEntry(getElevatorPositionState().toString());
+    elevatorPIDStateEntry = elevatorTable.getStringTopic("ElevatorPIDState").getEntry(getElevatorState().toString());
     elevatorPositionEntry = elevatorTable.getDoubleTopic("ElevatorPosition").getEntry(getElevatorPosition());
     elevatorPIDEntry = elevatorTable.getDoubleTopic("ElevatorPID").getEntry(getPIDValue());
     elevatorSetpointEntry = elevatorTable.getDoubleTopic("ElevatorSetpoint").getEntry(getSetpoint());
     elevatorLimitSwitchEntry = elevatorTable.getBooleanTopic("ElevatorLimitSwitch").getEntry(getLimitState());
-    elevatorPIDEnabledEntry = elevatorTable.getBooleanTopic("ElevatorPIDEnabled").getEntry(getPIDEnabled());
   }
 
   public static ElevatorSubsystem getInstance() {
@@ -79,22 +78,31 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (pidEnabled) {
+    if (getElevatorState() == ElevatorState.PID) {
       moveElevator();
     }
     updateNT();
   }
 
-  public enum ElevatorState {
+  public enum ElevatorPositionState {
     HOMED, BOTTOM, MID, MAX, HUMAN_PLAYER
   }
 
+  public enum ElevatorState {
+    PID, MANUAL
+  }
+
   /**
-   * Changes the elevator state
+   * Changes the elevator position state
    * 
-   * @param newState the new state
+   * @param newState New state
    */
-  public void changeElevatorState(ElevatorState newState) {
+  public void changeElevatorPositionState(ElevatorPositionState newState) {
+    if (newState == mPositionState)
+      return;
+
+    mPositionState = newState;
+
     switch (newState) {
       case HOMED:
         changeSetpoint(ElevatorConstants.elevatorHomedPosition);
@@ -112,6 +120,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         changeSetpoint(ElevatorConstants.elevatorHumanPlayerPosition);
         break;
     }
+  }
+
+  /**
+   * Changes the elevator control state
+   * 
+   * @param newState New State
+   */
+  public void changeElevatorState(ElevatorState newState) {
+    if (newState == mElevatorState)
+      return;
+
+    mElevatorState = newState;
   }
 
   /**
@@ -144,35 +164,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   /**
-   * Enalbes the PID Controller
-   */
-  public void enablePID() {
-    pidEnabled = true;
-  }
-
-  /**
-   * Disables the PID controller
-   */
-  public void disablePID() {
-    pidEnabled = false;
-  }
-
-  /**
-   * Gets the current PID enabled state
+   * Manually moves the elevator. Will only move if the {@link ElevatorState} is set to {@link ElevatorState#MANUAL}
    * 
-   * @return true if PID is enabled, false if not
-   */
-  public boolean getPIDEnabled() {
-    return pidEnabled;
-  }
-
-  /**
-   * Manually moves the elevator
-   * 
-   * @param speed
+   * @param speed Speed of the elevator
    */
   public void moveElevator(double speed) {
-    if (getPIDEnabled())
+    if (mElevatorState == ElevatorState.PID)
       return;
 
     if (elevatorHomed(speed))
@@ -185,8 +182,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   /**
    * Stops the elevator on touching the limit switch
    * 
-   * @param speed
-   * @return
+   * @param speed Speed of the elevator
+   * @return True if the elevator is homed
    */
   public boolean elevatorHomed(double speed) {
     if (speed > 0 && getLimitState()) {
@@ -201,12 +198,12 @@ public class ElevatorSubsystem extends SubsystemBase {
    * Updates al NetworkTable values
    */
   private void updateNT() {
-    elevatorStateEntry.set(getElevatorState().toString());
+    elevatorPositionStateEntry.set(getElevatorState().toString());
     elevatorPositionEntry.set(getElevatorPosition());
     elevatorPIDEntry.set(getPIDValue());
     elevatorSetpointEntry.set(getSetpoint());
     elevatorLimitSwitchEntry.set(getLimitState());
-    elevatorPIDEnabledEntry.set(getPIDEnabled());
+    elevatorPIDStateEntry.set(getElevatorState().toString());
   }
 
   /**
@@ -239,8 +236,17 @@ public class ElevatorSubsystem extends SubsystemBase {
    * 
    * @return Current elevator state
    */
-  private ElevatorState getElevatorState() {
-    return mState;
+  private ElevatorPositionState getElevatorPositionState() {
+    return mPositionState;
+  }
+
+  /**
+   * Gets the current PID enabled state
+   * 
+   * @return true if PID is enabled, false if not
+   */
+  public ElevatorState getElevatorState() {
+    return mElevatorState;
   }
 
   /**

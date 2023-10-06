@@ -4,6 +4,7 @@
 package com.team6647.commands.hybrid.elevator;
 
 import com.team6647.subsystems.ElevatorSubsystem;
+import com.team6647.subsystems.ElevatorSubsystem.ElevatorPositionState;
 import com.team6647.subsystems.ElevatorSubsystem.ElevatorState;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,7 +21,7 @@ public class StartElevator extends CommandBase {
 
   @Override
   public void initialize(){
-    elevatorSubsystem.disablePID();
+    elevatorSubsystem.changeElevatorState(ElevatorState.MANUAL);
   }
 
   @Override
@@ -32,8 +33,8 @@ public class StartElevator extends CommandBase {
   public void end(boolean interrupted) {
     elevatorSubsystem.moveElevator(0);
     elevatorSubsystem.resetElevatorPosition();
-    elevatorSubsystem.changeElevatorState(ElevatorState.HOMED);
-    elevatorSubsystem.enablePID();
+    elevatorSubsystem.changeElevatorPositionState(ElevatorPositionState.HOMED);
+    elevatorSubsystem.changeElevatorState(ElevatorState.MANUAL);
   }
 
   @Override
