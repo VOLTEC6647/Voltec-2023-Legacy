@@ -32,7 +32,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
   public static SuperSparkMax leftMotor = new SuperSparkMax(ArmIntakeConstants.leftPivotMotorID, GlobalIdleMode.brake,
       false, 80);
   public static SuperSparkMax rightMotor = new SuperSparkMax(ArmIntakeConstants.rightPivotMotorID,
-      GlobalIdleMode.brake, true, 80);
+      GlobalIdleMode.brake, false, 80);
 
   private ProfiledPIDController armController = new ProfiledPIDController(ArmIntakeConstants.pivotKp,
       ArmIntakeConstants.pivotKi, ArmIntakeConstants.pivotKd, new TrapezoidProfile.Constraints(2, 2));
