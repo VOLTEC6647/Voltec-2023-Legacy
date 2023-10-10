@@ -58,25 +58,27 @@ public class Constants {
         }
 
         public static class ArmIntakeConstants {
-                public static final int leftPivotMotorID = 18;
-                public static final int rightPivotMotorID = 19;
+                public static final int armMotor1ID = 18;
+                public static final int armMotor2ID = 19;
                 public static final int intakeMotorID = 20;
 
-                public static final double pivotKp = 0.3;
+                public static final double pivotKp = 0.05;
                 public static final double pivotKi = 0.0;
                 public static final double pivotKd = 0.0;
 
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
 
-                public static final double intakeHomedPosition = 0; // TODO SET
-                public static final double intakeFloorPosition = 0; // TODO SET
+                public static final double intakeHomedPosition = 200; // TODO SET
+                public static final double intakeFloorPosition = 35; // TODO SET
                 public static final double intakePlacingPositon = 0; // TODO SET
                 public static final double intakeScoringPositon = 0; // TODO SET
                 public static final double intakeIndexingPosition = 0; // TODO SET
                 public static final double intakeHumanPlayerPosition = 0; // TODO SET
 
-
+                public static final double armEncoderPositionConversionFactor = 360;
+                public static final double armEncoderZeroOffset = 221.6194081;
+                public static final boolean armEncoderInverted = false;
         }
 
         public static class IntakeConstants {
