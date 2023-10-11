@@ -62,18 +62,18 @@ public class Constants {
                 public static final int armMotor2ID = 19;
                 public static final int intakeMotorID = 20;
 
-                public static final double pivotKp = 0.05;
-                public static final double pivotKi = 0.0;
-                public static final double pivotKd = 0.0;
+                public static final double pivotKp = 0.0035; //0.0075
+                public static final double pivotKi = 0.0000000012;
+                public static final double pivotKd = 0;//0.1; //0.1
 
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
 
-                public static final double intakeHomedPosition = 200; // TODO SET
-                public static final double intakeFloorPosition = 35; // TODO SET
-                public static final double intakePlacingPositon = 0; // TODO SET
-                public static final double intakeScoringPositon = 0; // TODO SET
-                public static final double intakeIndexingPosition = 0; // TODO SET
+                public static final double intakeHomedPosition = 210; // TODO SET
+                public static final double intakeFloorPosition = 77; // TODO SET
+                public static final double intakePlacingPositon = 205; // TODO SET
+                public static final double intakeScoringPositon = 190; // TODO SET
+                public static final double intakeIndexingPosition = 234; // TODO SET
                 public static final double intakeHumanPlayerPosition = 0; // TODO SET
 
                 public static final double armEncoderPositionConversionFactor = 360;
@@ -101,11 +101,5 @@ public class Constants {
                 public static final double intakeSpeed = 0.7;
 
                 public static final int beamBrakePort = 0;
-        }
-
-        public static class IndexerConstants {
-                public static final int indexerMotorID = 17;
-
-                public static final double indexerSpeed = 0.2;
         }
 }
