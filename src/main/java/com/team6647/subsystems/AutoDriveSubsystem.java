@@ -17,7 +17,6 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.team6647.commands.hybrid.Intake.ToggleIntake;
-import com.team6647.subsystems.IndexerSubsystem.IndexerState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.AutoUtils;
 import com.team6647.util.Constants.DriveConstants;
@@ -60,13 +59,13 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
     resetOdometry(new Pose2d());
 
-    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
+/*     DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
     DriveConstants.eventMap.put("moveIntake",
         AutoUtils.intakePieceSequence(RollerState.COLLECTING, IndexerState.INDEXING));
     DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
     DriveConstants.eventMap.put("throwIntake",
         AutoUtils.intakePieceSequence(RollerState.SPITTING, IndexerState.SPITTING).withTimeout(1.5));
-
+ */
     this.alliance = DriverStation.getAlliance();
 
   }
@@ -101,7 +100,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * {@link SwerveDrivePoseEstimator}
    */
   public void computeVisionMeasurements() {
-    LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
+   /*  LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
     if (!(result.botpose[0] == 0 && result.botpose[1] == 0) &&
         LimelightHelpers.getTA("limelight") < 30) {
@@ -116,7 +115,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
             Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
                 (result.latency_pipeline / 1000.0));
       }
-    }
+    } */
   }
 
   /**

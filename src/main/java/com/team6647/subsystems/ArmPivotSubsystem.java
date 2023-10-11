@@ -29,13 +29,13 @@ public class ArmPivotSubsystem extends SubsystemBase {
   private static DoubleEntry armPIDDoubleEntry;
   private static DoubleEntry armSetpointDoubleEntry;
 
-  public static SuperSparkMax leftMotor = new SuperSparkMax(ArmIntakeConstants.leftPivotMotorID, GlobalIdleMode.brake,
-      false, 80);
-  public static SuperSparkMax rightMotor = new SuperSparkMax(ArmIntakeConstants.rightPivotMotorID,
-      GlobalIdleMode.brake, false, 80);
+  public static SuperSparkMax armMotor1 = new SuperSparkMax(ArmIntakeConstants.armMotor1ID, GlobalIdleMode.brake,
+      true, 80);
+  public static SuperSparkMax armMotor2 = new SuperSparkMax(ArmIntakeConstants.armMotor2ID,
+      GlobalIdleMode.brake, true, 80, ArmIntakeConstants.armEncoderPositionConversionFactor, ArmIntakeConstants.armEncoderZeroOffset, ArmIntakeConstants.armEncoderInverted);
 
   private ProfiledPIDController armController = new ProfiledPIDController(ArmIntakeConstants.pivotKp,
-      ArmIntakeConstants.pivotKi, ArmIntakeConstants.pivotKd, new TrapezoidProfile.Constraints(2, 2));
+      ArmIntakeConstants.pivotKi, ArmIntakeConstants.pivotKd, new TrapezoidProfile.Constraints(25, 25));
 
   private AbsoluteEncoder armEncoder;
 
@@ -46,8 +46,8 @@ public class ArmPivotSubsystem extends SubsystemBase {
   private double pidVal = 0;
 
   private ArmPivotSubsystem() {
-    armEncoder = leftMotor.getAbsoluteEncoder(Type.kDutyCycle);
-    rightMotor.follow(leftMotor);
+    armEncoder = armMotor2.getAbsoluteEncoder(Type.kDutyCycle);
+    armEncoder.setPositionConversionFactor(0.494);
 
     armPivotTable = NetworkTableInstance.getDefault().getTable("ArmTable/Pivot");
     armStateEntry = armPivotTable.getStringTopic("ArmPivotState").getEntry(getArmState().toString());
@@ -83,7 +83,8 @@ public class ArmPivotSubsystem extends SubsystemBase {
 
     double total = pidValue * 12;
 
-    leftMotor.setVoltage(total);
+    armMotor1.setVoltage(total);
+    armMotor2.setVoltage(total);
   }
 
   public void changeArmState(ArmPivotState newState) {
@@ -121,7 +122,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
    * @param newSetpoint New setpoint
    */
   public void changeSetpoint(double newSetpoint) {
-    if (newSetpoint < ArmIntakeConstants.intakeFloorPosition || newSetpoint > ArmIntakeConstants.intakeScoringPositon) {
+    if (newSetpoint < ArmIntakeConstants.intakeFloorPosition || newSetpoint > ArmIntakeConstants.intakeIndexingPosition) {
       newSetpoint = Functions.clamp(newSetpoint, ArmIntakeConstants.intakeFloorPosition,
           ArmIntakeConstants.intakeScoringPositon);
     }

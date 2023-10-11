@@ -17,12 +17,10 @@ import com.team6647.subsystems.ArmIntakeSubsytem;
 import com.team6647.subsystems.ArmPivotSubsystem;
 import com.team6647.subsystems.AutoDriveSubsystem;
 import com.team6647.subsystems.ElevatorSubsystem;
-import com.team6647.subsystems.IndexerSubsystem;
 import com.team6647.subsystems.IntakePivotSubsystem;
 import com.team6647.subsystems.IntakeSubsystem;
 import com.team6647.subsystems.ArmPivotSubsystem.ArmPivotState;
 import com.team6647.subsystems.ElevatorSubsystem.ElevatorPositionState;
-import com.team6647.subsystems.IndexerSubsystem.IndexerState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.AutoUtils;
 import com.team6647.util.Constants.OperatorConstants;
@@ -35,11 +33,11 @@ public class RobotContainer extends SuperRobotContainer {
   /* Systems */
   private AndromedaSwerve andromedaSwerve;
   private AutoDriveSubsystem autoDriveSubsystem;
-  private IntakePivotSubsystem cubeintakeSubsystem;
+/*   private IntakePivotSubsystem cubeintakeSubsystem;
   private IntakeSubsystem intakeSubsystem;
   private IndexerSubsystem indexerSubsystem;
   private ElevatorSubsystem elevatorSubsystem;
-  private ArmIntakeSubsytem armIntakeSubsystem;
+  private ArmIntakeSubsytem armIntakeSubsystem; */
   private ArmPivotSubsystem armPivotSubsystem;
 
   private RobotContainer() {
@@ -67,11 +65,11 @@ public class RobotContainer extends SuperRobotContainer {
         AndromedaProfileConfig.getConfig(AndromedaProfiles.ANDROMEDA_CONFIG));
 
     autoDriveSubsystem = AutoDriveSubsystem.getInstance(andromedaSwerve);
-    intakeSubsystem = IntakeSubsystem.getInstance();
+/*     intakeSubsystem = IntakeSubsystem.getInstance();
     cubeintakeSubsystem = IntakePivotSubsystem.getInstance();
     indexerSubsystem = IndexerSubsystem.getInstance();
     elevatorSubsystem = ElevatorSubsystem.getInstance();
-    armIntakeSubsystem = ArmIntakeSubsytem.getInstance();
+    armIntakeSubsystem = ArmIntakeSubsytem.getInstance(); */
     armPivotSubsystem = ArmPivotSubsystem.getInstance();
   }
 
@@ -89,7 +87,12 @@ public class RobotContainer extends SuperRobotContainer {
 
     /* Driver Controller 2 */
 
-    OperatorConstants.driverController2.leftTrigger()
+    OperatorConstants.driverController2.a().whileTrue(new MoveArm(armPivotSubsystem, ArmPivotState.HOMED));
+    OperatorConstants.driverController2.b().whileTrue(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR));
+    OperatorConstants.driverController2.x().whileTrue(new MoveArm(armPivotSubsystem, ArmPivotState.SCORING));
+
+
+/*     OperatorConstants.driverController2.leftTrigger()
         .whileTrue(
             AutoUtils.intakePieceSequence(
                 RollerState.COLLECTING,
@@ -111,8 +114,10 @@ public class RobotContainer extends SuperRobotContainer {
     OperatorConstants.driverController2.b().whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MAX));
     OperatorConstants.driverController2.leftStick()
         .whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
+    */
 
-  }
+    
+  } 
 
   public Command getAutonomousCommand() {
     return autoDriveSubsystem.createFullAuto("Top");
