@@ -35,7 +35,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
       GlobalIdleMode.brake, true, 80, ArmIntakeConstants.armEncoderPositionConversionFactor, ArmIntakeConstants.armEncoderZeroOffset, ArmIntakeConstants.armEncoderInverted);
 
   private ProfiledPIDController armController = new ProfiledPIDController(ArmIntakeConstants.pivotKp,
-      ArmIntakeConstants.pivotKi, ArmIntakeConstants.pivotKd, new TrapezoidProfile.Constraints(25, 25));
+      ArmIntakeConstants.pivotKi, ArmIntakeConstants.pivotKd, new TrapezoidProfile.Constraints(700, 700));
 
   private AbsoluteEncoder armEncoder;
 
