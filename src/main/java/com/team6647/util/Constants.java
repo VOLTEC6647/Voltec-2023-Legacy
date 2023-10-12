@@ -58,8 +58,8 @@ public class Constants {
         }
 
         public static class ArmIntakeConstants {
-                public static final int armMotor1ID = 18;
-                public static final int armMotor2ID = 19;
+                public static final int armMotor1ID = 17;
+                public static final int armMotor2ID = 18;
                 public static final int intakeMotorID = 20;
 
                 public static final double pivotKp = 0.0035; //0.0075
