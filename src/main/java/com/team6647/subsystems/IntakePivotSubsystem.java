@@ -29,8 +29,8 @@ public class IntakePivotSubsystem extends SubsystemBase {
   private static DoubleEntry pivotPIDPublisher;
   private static DoubleEntry pivotSetpointPublisher;
 
-  private static SuperSparkMax pivotMotor = new SuperSparkMax(IntakeConstants.pivotIntakeID, GlobalIdleMode.brake,
-      false, 80, IntakeConstants.pivotPositionConversionFactor, IntakeConstants.pivotZeroOffset, true);
+  private static SuperSparkMax pivotMotor = new SuperSparkMax(IntakeConstants.pivotIntakeID, GlobalIdleMode.Coast,
+      false, 80, IntakeConstants.pivotPositionConversionFactor, IntakeConstants.pivotZeroOffset, false);
 
   private static AbsoluteEncoder pivotEncoder;
 
@@ -81,6 +81,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     pidVal = pidValue;
 
     double total = pidValue * 12;
+    //pivotMotor.set(-0.5);
 
     pivotMotor.setVoltage(total);
   }
