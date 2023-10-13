@@ -26,12 +26,12 @@ public class StartElevator extends CommandBase {
 
   @Override
   public void execute() {
-    elevatorSubsystem.moveElevator(-0.25);
+    elevatorSubsystem.manualMoveElevator(-0.25);
   }
 
   @Override
   public void end(boolean interrupted) {
-    elevatorSubsystem.moveElevator(0);
+    elevatorSubsystem.manualMoveElevator(0);
     elevatorSubsystem.resetElevatorPosition();
     elevatorSubsystem.changeElevatorPositionState(ElevatorPositionState.HOMED);
     elevatorSubsystem.changeElevatorState(ElevatorState.MANUAL);
