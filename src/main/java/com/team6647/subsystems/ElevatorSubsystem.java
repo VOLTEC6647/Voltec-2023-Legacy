@@ -7,7 +7,8 @@ package com.team6647.subsystems;
 
 import com.andromedalib.math.Functions;
 import com.andromedalib.motorControllers.IdleManager.GlobalIdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.andromedalib.motorControllers.SuperSparkMax;
 import com.team6647.util.Constants.ElevatorConstants;
 
@@ -32,11 +33,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static DoubleEntry elevatorSetpointEntry;
   private static BooleanEntry elevatorLimitSwitchEntry;
 
-  private static SuperSparkMax leftMotor = new SuperSparkMax(ElevatorConstants.leftMotorID, GlobalIdleMode.Coast, true,
+  private static SuperSparkMax leftMotor = new SuperSparkMax(ElevatorConstants.leftMotorID, GlobalIdleMode.Coast, false,
       80);
   private static SuperSparkMax rightMotor = new SuperSparkMax(ElevatorConstants.rightMotorID, GlobalIdleMode.Coast,
-      false,
+      true,
       80);
+
+  private static AbsoluteEncoder elevatorEncoder;
 
   private static ProfiledPIDController elevatorController = new ProfiledPIDController(ElevatorConstants.elevatorKp,
       ElevatorConstants.elevatorKi, ElevatorConstants.elevatorKd, new TrapezoidProfile.Constraints(2, 2));
@@ -46,21 +49,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double setPoint = ElevatorConstants.minElevatorSoftLimit;
   private ElevatorPositionState mPositionState = ElevatorPositionState.HOMED;
   private ElevatorState mElevatorState = ElevatorState.PID;
-  
+
   private double pidVal = 0;
-  
+
   private ElevatorSubsystem() {
-    leftMotor.setSoftLimit(SoftLimitDirection.kForward, ElevatorConstants.minElevatorSoftLimit);
-    leftMotor.setSoftLimit(SoftLimitDirection.kReverse, ElevatorConstants.maxElevatorSoftLimit);
-    leftMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    leftMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
+    elevatorEncoder = leftMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
-    rightMotor.setSoftLimit(SoftLimitDirection.kForward, ElevatorConstants.minElevatorSoftLimit);
-    rightMotor.setSoftLimit(SoftLimitDirection.kReverse, ElevatorConstants.maxElevatorSoftLimit);
-    rightMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
-    rightMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-
-    rightMotor.follow(leftMotor);
+    resetEncoderToAbsolute();
 
     elevatorTable = NetworkTableInstance.getDefault().getTable("ElevatorTable");
     elevatorPositionStateEntry = elevatorTable.getStringTopic("ElevatorPositionState")
@@ -157,21 +152,22 @@ public class ElevatorSubsystem extends SubsystemBase {
   private void moveElevator() {
     double pidValue = elevatorController.calculate(getElevatorPosition(), setPoint);
 
-    pidValue = Functions.clamp(pidValue, -0.4, 0.4);
+    pidValue = Functions.clamp(pidValue, -0.2, 0.2);
     pidVal = pidValue;
 
     double total = pidValue * 12;
 
     leftMotor.setVoltage(total);
-    //rightMotor.setVoltage(total);
+    rightMotor.setVoltage(total);
   }
 
   /**
-   * Manually moves the elevator. Will only move if the {@link ElevatorState} is set to {@link ElevatorState#MANUAL}
+   * Manually moves the elevator. Will only move if the {@link ElevatorState} is
+   * set to {@link ElevatorState#MANUAL}
    * 
    * @param speed Speed of the elevator
    */
-  public void moveElevator(double speed) {
+  public void manualMoveElevator(double speed) {
     if (mElevatorState == ElevatorState.PID)
       return;
 
@@ -193,6 +189,10 @@ public class ElevatorSubsystem extends SubsystemBase {
       return false;
     }
     return getLimitState();
+  }
+
+  public void resetEncoderToAbsolute() {
+    leftMotor.setPosition(elevatorEncoder.getPosition());
   }
 
   /* Telemetry */
@@ -227,6 +227,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   /**
    * Gets the current state of the limit switch
+   * abejita was here :)
    * 
    * @return Current limit switch state
    */
