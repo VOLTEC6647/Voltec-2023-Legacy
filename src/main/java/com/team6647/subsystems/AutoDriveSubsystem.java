@@ -20,6 +20,7 @@ import com.team6647.commands.hybrid.Intake.ToggleIntake;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.AutoUtils;
 import com.team6647.util.Constants.DriveConstants;
+import com.team6647.util.shuffleboard.TelemetryManager;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -59,13 +60,6 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
     resetOdometry(new Pose2d());
 
-/*     DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
-    DriveConstants.eventMap.put("moveIntake",
-        AutoUtils.intakePieceSequence(RollerState.COLLECTING, IndexerState.INDEXING));
-    DriveConstants.eventMap.put("toggleIntake", new ToggleIntake(IntakePivotSubsystem.getInstance()));
-    DriveConstants.eventMap.put("throwIntake",
-        AutoUtils.intakePieceSequence(RollerState.SPITTING, IndexerState.SPITTING).withTimeout(1.5));
- */
     this.alliance = DriverStation.getAlliance();
 
   }
@@ -164,7 +158,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
   }
 
-  public Command createFullAuto(String pathName) {
+  public Command getFullAuto(String pathName) {
 
     List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, new PathConstraints(5, 5));
 
