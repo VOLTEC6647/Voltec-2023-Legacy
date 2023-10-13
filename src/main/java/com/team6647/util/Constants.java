@@ -33,7 +33,6 @@ public class Constants {
                 public static final double balanceTolerance = 11;
 
                 public static HashMap<String, Command> eventMap = new HashMap<>();
-
         }
 
         public static class ElevatorConstants {
@@ -62,9 +61,9 @@ public class Constants {
                 public static final int armMotor2ID = 18;
                 public static final int intakeMotorID = 20;
 
-                public static final double pivotKp = 0.0035; //0.0075
+                public static final double pivotKp = 0.0035; // 0.0075
                 public static final double pivotKi = 0.0000000012;
-                public static final double pivotKd = 0;//0.1; //0.1
+                public static final double pivotKd = 0;// 0.1; //0.1
 
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
@@ -72,7 +71,7 @@ public class Constants {
                 public static final double intakeHomedPosition = 190;
                 public static final double intakeFloorPosition = 76;
                 public static final double intakePlacingPositon = 205; // TODO SET
-                public static final double intakeScoringPositon = 190; 
+                public static final double intakeScoringPositon = 190;
                 public static final double intakeIndexingPosition = 234;
                 public static final double intakeHumanPlayerPosition = 190;
 
@@ -89,16 +88,15 @@ public class Constants {
                 public static final double intakeKi = 0.0;
                 public static final double intakeKd = 0.0;
 
-                
-                public static final double intakeHomedPosition = 73; 
-                public static final double intakeExtendedPosition = 96; 
-              
-                public static final double minIntakePosition = intakeHomedPosition + 1; 
+                public static final double intakeHomedPosition = 73;
+                public static final double intakeExtendedPosition = 96;
+
+                public static final double minIntakePosition = intakeHomedPosition + 1;
                 public static final double maxIntakePosition = intakeExtendedPosition + 1;
 
                 public static final double pivotPositionConversionFactor = 100;
                 public static final double pivotZeroOffset = 90.0467753;
-                
+
                 public static final double intakeSpeed = 0.7;
 
                 public static final int beamBrakePort = 0;
