@@ -26,15 +26,6 @@ public class AutoUtils {
     private static ArmIntakeSubsytem armIntakeSubsystem = ArmIntakeSubsytem.getInstance();
     private static ArmPivotSubsystem armPivotSubsystem = ArmPivotSubsystem.getInstance();
 
-    /*
-     * public static Command intakePieceSequence() {
-     * return Commands.parallel(new MoveIntake(intakeSubsystem, rollerState),
-     * new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
-     * new MoveIndexer(indexerSubsystem, indexerState), new
-     * MoveArmIntake(armIntakeSubsystem, rollerState));
-     * }
-     */
-
     public static Command intakePieceSequence(RollerState rollerState) {
         return Commands.parallel(new MoveIntake(intakeSubsystem, rollerState),
                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
