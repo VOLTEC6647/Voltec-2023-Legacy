@@ -17,9 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "toggleIntake",
-          "throwIntake",
-          "toggleIntake"
+          "placeCube"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -46,9 +44,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "toggleIntake",
-          "moveIntake",
-          "toggleIntake"
+          "intakeIn"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "before",
@@ -61,8 +57,8 @@
         "y": 5.057884114032117
       },
       "prevControl": {
-        "x": 4.723081117022016,
-        "y": 4.82285889919002
+        "x": 4.732566302200496,
+        "y": 5.057884114032117
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -72,9 +68,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "toggleIntake",
-          "throwIntake",
-          "toggleIntake"
+          "placePiece"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
