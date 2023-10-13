@@ -40,20 +40,20 @@ public class Constants {
                 public static final int leftMotorID = 15;
                 public static final int rightMotorID = 16;
 
-                public static final double elevatorKp = 0.3;
+                public static final double elevatorKp = 0.06;
                 public static final double elevatorKi = 0;
-                public static final double elevatorKd = 0;
+                public static final double elevatorKd = 0.015;
 
                 public static final int elevatorSwitchID = 1;
 
-                public static final float minElevatorSoftLimit = 0; // TODO SET
-                public static final float maxElevatorSoftLimit = 100; // TODO SET
+                public static final float minElevatorSoftLimit = 0;
+                public static final float maxElevatorSoftLimit = 38;
 
                 public static final double elevatorHomedPosition = 0; // TODO SET
-                public static final double elevatorBottomPosition = 0; // TODO SET
-                public static final double elevatorMiddlePosition = 0; // TODO SET
-                public static final double elevatorTopPosition = 0; // TODO SET
-                public static final double elevatorHumanPlayerPosition = 0; // TODO SET
+                public static final double elevatorBottomPosition = 10; // TODO SET
+                public static final double elevatorMiddlePosition = 20; // TODO SET
+                public static final double elevatorTopPosition = 38; // TODO SET
+                public static final double elevatorHumanPlayerPosition = 20; // TODO SET
 
         }
 
@@ -69,12 +69,12 @@ public class Constants {
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
 
-                public static final double intakeHomedPosition = 210; // TODO SET
-                public static final double intakeFloorPosition = 77; // TODO SET
+                public static final double intakeHomedPosition = 190;
+                public static final double intakeFloorPosition = 76;
                 public static final double intakePlacingPositon = 205; // TODO SET
-                public static final double intakeScoringPositon = 190; // TODO SET
-                public static final double intakeIndexingPosition = 234; // TODO SET
-                public static final double intakeHumanPlayerPosition = 0; // TODO SET
+                public static final double intakeScoringPositon = 190; 
+                public static final double intakeIndexingPosition = 234;
+                public static final double intakeHumanPlayerPosition = 190;
 
                 public static final double armEncoderPositionConversionFactor = 360;
                 public static final double armEncoderZeroOffset = 221.6194081;
@@ -85,19 +85,20 @@ public class Constants {
                 public static final int pivotIntakeID = 13;
                 public static final int intakeMotorID = 14;
 
-                public static final double intakeKp = 0.045; // TODO SET
+                public static final double intakeKp = 0.02;
                 public static final double intakeKi = 0.0;
                 public static final double intakeKd = 0.0;
 
-                public static final double minIntakePosition = 8; // TODO SET
-                public static final double maxIntakePosition = 90; // TODO SET
-
-                public static final double intakeHomedPosition = 32; // TODO SET
-                public static final double intakeExtendedPosition = 65; // TODO SET
+                
+                public static final double intakeHomedPosition = 73; 
+                public static final double intakeExtendedPosition = 96; 
+              
+                public static final double minIntakePosition = intakeHomedPosition + 1; 
+                public static final double maxIntakePosition = intakeExtendedPosition + 1;
 
                 public static final double pivotPositionConversionFactor = 100;
-                public static final double pivotZeroOffset = 90.0467753; // TODO SET
-
+                public static final double pivotZeroOffset = 90.0467753;
+                
                 public static final double intakeSpeed = 0.7;
 
                 public static final int beamBrakePort = 0;
