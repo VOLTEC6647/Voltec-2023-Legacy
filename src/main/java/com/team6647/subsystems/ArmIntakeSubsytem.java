@@ -24,7 +24,7 @@ public class ArmIntakeSubsytem extends SubsystemBase {
   private static StringEntry ArmIntakeStateEntry;
   private static BooleanEntry beamBrakeEntry;
 
-  private SuperTalonFX intakeMotor = new SuperTalonFX(ArmIntakeConstants.intakeMotorID, GlobalIdleMode.Coast, false);
+  private SuperTalonFX intakeMotor = new SuperTalonFX(ArmIntakeConstants.intakeMotorID, GlobalIdleMode.Coast, true);
 
   private RollerState mState = RollerState.STOPPED;
   private DigitalInput beamBrake = new DigitalInput(ArmIntakeConstants.beamBrakePort);
