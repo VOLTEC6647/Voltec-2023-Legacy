@@ -12,12 +12,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 public class AutoModeSelector {
     private SendableChooser<AutoSelection> autoChooser = new SendableChooser<>();
 
-    private enum AutoSelection {
-        DafultMode,
+    public enum AutoSelection {
+        Top,
+        Middle,
+        Bottom,
+        OnlyPiece,
+        DoNothimg,
+        LeaveCommunity
     }
 
     public AutoModeSelector() {
-        autoChooser.setDefaultOption("Default mode", AutoSelection.DafultMode);
+        autoChooser.setDefaultOption("Top auto", AutoSelection.Top);
+        autoChooser.setDefaultOption("Middle auto", AutoSelection.Top);
+        autoChooser.setDefaultOption("Bottom auto", AutoSelection.Top);
+        autoChooser.setDefaultOption("Only Piece auto", AutoSelection.OnlyPiece);
+        autoChooser.setDefaultOption("Do nothing auto", AutoSelection.DoNothimg);
+        autoChooser.setDefaultOption("Leave Community auto", AutoSelection.LeaveCommunity);
 
         ShuffleboardConstants.kShuffleboardTab.add("Auto Mode", autoChooser);
     }
