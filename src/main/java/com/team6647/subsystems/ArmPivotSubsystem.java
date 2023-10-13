@@ -30,15 +30,15 @@ public class ArmPivotSubsystem extends SubsystemBase {
   private static DoubleEntry armSetpointDoubleEntry;
 
   public static SuperSparkMax armMotor1 = new SuperSparkMax(ArmIntakeConstants.armMotor1ID, GlobalIdleMode.brake,
-      true, 80);
+      true, 80, ArmIntakeConstants.armEncoderPositionConversionFactor, ArmIntakeConstants.armEncoderZeroOffset,
+      ArmIntakeConstants.armEncoderInverted);
   public static SuperSparkMax armMotor2 = new SuperSparkMax(ArmIntakeConstants.armMotor2ID,
-      GlobalIdleMode.brake, true, 80, ArmIntakeConstants.armEncoderPositionConversionFactor, ArmIntakeConstants.armEncoderZeroOffset, ArmIntakeConstants.armEncoderInverted);
+      GlobalIdleMode.brake, true, 80);
 
   private ProfiledPIDController armController = new ProfiledPIDController(ArmIntakeConstants.pivotKp,
       ArmIntakeConstants.pivotKi, ArmIntakeConstants.pivotKd, new TrapezoidProfile.Constraints(700, 700));
 
   private AbsoluteEncoder armEncoder;
-
 
   private double setpoint = ArmIntakeConstants.intakeHomedPosition;
   private ArmPivotState mArmState = ArmPivotState.HOMED;
@@ -46,8 +46,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
   private double pidVal = 0;
 
   private ArmPivotSubsystem() {
-    armEncoder = armMotor2.getAbsoluteEncoder(Type.kDutyCycle);
-    armEncoder.setPositionConversionFactor(0.494);
+    armEncoder = armMotor1.getAbsoluteEncoder(Type.kDutyCycle);
 
     armPivotTable = NetworkTableInstance.getDefault().getTable("ArmTable/Pivot");
     armStateEntry = armPivotTable.getStringTopic("ArmPivotState").getEntry(getArmState().toString());
@@ -122,7 +121,8 @@ public class ArmPivotSubsystem extends SubsystemBase {
    * @param newSetpoint New setpoint
    */
   public void changeSetpoint(double newSetpoint) {
-    if (newSetpoint < ArmIntakeConstants.intakeFloorPosition || newSetpoint > ArmIntakeConstants.intakeIndexingPosition) {
+    if (newSetpoint < ArmIntakeConstants.intakeFloorPosition
+        || newSetpoint > ArmIntakeConstants.intakeIndexingPosition) {
       newSetpoint = Functions.clamp(newSetpoint, ArmIntakeConstants.intakeFloorPosition,
           ArmIntakeConstants.intakeScoringPositon);
     }
