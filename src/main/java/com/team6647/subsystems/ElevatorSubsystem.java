@@ -29,12 +29,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static StringEntry elevatorPositionStateEntry;
   private static StringEntry elevatorPIDStateEntry;
   private static DoubleEntry elevatorPositionEntry;
+  private static DoubleEntry elevatorEncoderPositionEntry;
   private static DoubleEntry elevatorPIDEntry;
   private static DoubleEntry elevatorSetpointEntry;
   private static BooleanEntry elevatorLimitSwitchEntry;
 
   private static SuperSparkMax leftMotor = new SuperSparkMax(ElevatorConstants.leftMotorID, GlobalIdleMode.Coast, false,
-      80);
+      80, ElevatorConstants.elevatorEncoderPositionConversionFactor, ElevatorConstants.elevatorEncoderZeroOffset, ElevatorConstants.elevatorEncoderInverted);
   private static SuperSparkMax rightMotor = new SuperSparkMax(ElevatorConstants.rightMotorID, GlobalIdleMode.Coast,
       true,
       80);
@@ -42,7 +43,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static AbsoluteEncoder elevatorEncoder;
 
   private static ProfiledPIDController elevatorController = new ProfiledPIDController(ElevatorConstants.elevatorKp,
-      ElevatorConstants.elevatorKi, ElevatorConstants.elevatorKd, new TrapezoidProfile.Constraints(2, 2));
+      ElevatorConstants.elevatorKi, ElevatorConstants.elevatorKd, new TrapezoidProfile.Constraints(40, 35));
 
   private static DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.elevatorSwitchID);
 
@@ -55,13 +56,12 @@ public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorSubsystem() {
     elevatorEncoder = leftMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
-    resetEncoderToAbsolute();
-
     elevatorTable = NetworkTableInstance.getDefault().getTable("ElevatorTable");
     elevatorPositionStateEntry = elevatorTable.getStringTopic("ElevatorPositionState")
         .getEntry(getElevatorPositionState().toString());
     elevatorPIDStateEntry = elevatorTable.getStringTopic("ElevatorPIDState").getEntry(getElevatorState().toString());
     elevatorPositionEntry = elevatorTable.getDoubleTopic("ElevatorPosition").getEntry(getElevatorPosition());
+   elevatorEncoderPositionEntry = elevatorTable.getDoubleTopic("ElevatorEncoderPosition").getEntry(getElevatorEncoderPosition());
     elevatorPIDEntry = elevatorTable.getDoubleTopic("ElevatorPID").getEntry(getPIDValue());
     elevatorSetpointEntry = elevatorTable.getDoubleTopic("ElevatorSetpoint").getEntry(getSetpoint());
     elevatorLimitSwitchEntry = elevatorTable.getBooleanTopic("ElevatorLimitSwitch").getEntry(getLimitState());
@@ -192,7 +192,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void resetEncoderToAbsolute() {
-    leftMotor.setPosition(elevatorEncoder.getPosition());
+    leftMotor.setPosition(getElevatorEncoderPosition());
   }
 
   /* Telemetry */
@@ -203,6 +203,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private void updateNT() {
     elevatorPositionStateEntry.set(getElevatorPositionState().toString());
     elevatorPositionEntry.set(getElevatorPosition());
+    elevatorEncoderPositionEntry.set(getElevatorEncoderPosition());
     elevatorPIDStateEntry.set(getElevatorState().toString());
     elevatorPIDEntry.set(getPIDValue());
     elevatorSetpointEntry.set(getSetpoint());
@@ -216,6 +217,10 @@ public class ElevatorSubsystem extends SubsystemBase {
    */
   public double getElevatorPosition() {
     return leftMotor.getPosition();
+  }
+
+  public double getElevatorEncoderPosition(){
+    return elevatorEncoder.getPosition();
   }
 
   /**
