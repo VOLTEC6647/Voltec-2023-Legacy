@@ -16,11 +16,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import com.team6647.commands.hybrid.Intake.ToggleIntake;
-import com.team6647.subsystems.IntakeSubsystem.RollerState;
-import com.team6647.util.AutoUtils;
 import com.team6647.util.Constants.DriveConstants;
-import com.team6647.util.shuffleboard.TelemetryManager;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -94,7 +90,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * {@link SwerveDrivePoseEstimator}
    */
   public void computeVisionMeasurements() {
-   /*  LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
+    LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
 
     if (!(result.botpose[0] == 0 && result.botpose[1] == 0) &&
         LimelightHelpers.getTA("limelight") < 30) {
@@ -109,7 +105,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
             Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
                 (result.latency_pipeline / 1000.0));
       }
-    } */
+    }
   }
 
   /**
@@ -166,7 +162,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
         this::getPose,
         this::resetOdometry,
         SwerveConstants.swerveKinematics,
-        new PIDConstants(1, 0.0, 0.0),
+        new PIDConstants(1.5, 0.0, 0.0),
         new PIDConstants(2, 0.0, 0.0),
         swerve::setModuleStates,
         DriveConstants.eventMap,
