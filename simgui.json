@@ -46,6 +46,8 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Team 6647/Auto Mode": "String Chooser",
+      "/Shuffleboard/Team 6647/Grid Placement": "String Chooser",
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
@@ -79,16 +81,9 @@
         }
       },
       "ArmTable": {
-        "Intake": {
-          "open": true
-        },
         "Pivot": {
           "open": true
-        },
-        "open": true
-      },
-      "ElevatorTable": {
-        "open": true
+        }
       },
       "IntakeTable": {
         "Pivot": {
@@ -96,8 +91,7 @@
         },
         "Roller": {
           "open": true
-        },
-        "open": true
+        }
       }
     }
   },
