@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private static NetworkTable intakeRollerTable;
   private static StringEntry intakeRollerStateEntry;
 
-  private SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast, true, 80);
+  private SuperSparkMax intakeMotor = new SuperSparkMax(IntakeConstants.intakeMotorID, GlobalIdleMode.Coast, false, 80);
 
   private RollerState mState = RollerState.STOPPED;
 
