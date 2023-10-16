@@ -184,7 +184,7 @@ public class RobotContainer extends SuperRobotContainer {
                                                 .sequence(new ToggleIntake(cubeintakeSubsystem),
                                                                 Commands.waitSeconds(0.3),
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
-                                                                AutoUtils.intakeCubeSequence(RollerState.COLLECTING)))
+                                                                AutoUtils.teleopIntakeCubeSequence(RollerState.COLLECTING)))
                                 .onFalse(Commands.sequence(
                                                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
                                                 new ToggleIntake(cubeintakeSubsystem)));
@@ -195,7 +195,7 @@ public class RobotContainer extends SuperRobotContainer {
                                                 .sequence(new ToggleIntake(cubeintakeSubsystem),
                                                                 Commands.waitSeconds(0.4),
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
-                                                                AutoUtils.intakeCubeSequence(RollerState.SPITTING)))
+                                                                AutoUtils.teleopIntakeCubeSequence(RollerState.SPITTING)))
                                 .onFalse(Commands.sequence(
                                                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
                                                 new ToggleIntake(cubeintakeSubsystem)));

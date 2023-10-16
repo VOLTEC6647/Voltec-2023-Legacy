@@ -76,49 +76,63 @@ public class AutoUtils {
         switch (placement) {
             case Bottom:
                 if (piece == Piece.Cone)
-                    return placeConeSequence(ElevatorPositionState.BOTTOM);
+                    return autoPlaceConeSequence(ElevatorPositionState.BOTTOM);
 
                 if (piece == Piece.Cube)
-                    return placeCubeSequence(ElevatorPositionState.BOTTOM);
+                    return autoPlaceCubeSequence(ElevatorPositionState.BOTTOM);
             case Middle:
                 if (piece == Piece.Cone)
-                    return placeConeSequence(ElevatorPositionState.MID);
+                    return autoPlaceConeSequence(ElevatorPositionState.MID);
 
                 if (piece == Piece.Cube)
-                    return placeCubeSequence(ElevatorPositionState.MID);
+                    return autoPlaceCubeSequence(ElevatorPositionState.MID);
             case Top:
                 if (piece == Piece.Cone)
-                    return placeConeSequence(ElevatorPositionState.MAX);
+                    return autoPlaceConeSequence(ElevatorPositionState.MAX);
 
                 if (piece == Piece.Cube)
-                    return placeCubeSequence(ElevatorPositionState.MAX);
+                    return autoPlaceCubeSequence(ElevatorPositionState.MAX);
         }
 
         return null;
     }
-
-    public static Command intakeCubeSequence(RollerState rollerState) {
+    
+    /* Teleop  */
+    public static Command teleopIntakeCubeSequence(RollerState rollerState) {
         return Commands.parallel(new MoveIntake(intakeSubsystem, rollerState),
                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
                 new MoveArmIntake(armIntakeSubsystem, rollerState));
     }
 
-    public static Command intakeConeSequence() {
+    /* Auto */
+
+    /* Spits the cone for intaking due to the inversed pulley system */
+    public static Command teleopConeIntakeSequence() {
         return Commands.sequence(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR),
-                new MoveArmIntake(armIntakeSubsystem, RollerState.COLLECTING).withTimeout(1),
+                new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING));
+    }
+
+    /* Spits the cone for intaking due to the inversed pulley system */
+    public static Command autoIntakeConeSequence() {
+        return Commands.sequence(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR),
+                new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING).withTimeout(1),
                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED));
     }
 
-    public static Command placeConeSequence(ElevatorPositionState elevatorState) {
+    public static Command autoPlaceConeSequence(ElevatorPositionState elevatorState) {
         return Commands.sequence(new ExtendElevator(elevatorSubsystem, elevatorState),
                 Commands.parallel(new MoveArm(armPivotSubsystem, ArmPivotState.SCORING),
-                        new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING)).withTimeout(2));
+                        new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING)).withTimeout(2),
+                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
     }
 
-    public static Command placeCubeSequence(ElevatorPositionState elevatorState) {
+    public static Command autoPlaceCubeSequence(ElevatorPositionState elevatorState) {
         return Commands.sequence(new ExtendElevator(elevatorSubsystem, elevatorState),
                 Commands.parallel(
-                        new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING)).withTimeout(2));
+                        new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING)).withTimeout(2),
+                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
     }
 
 }

@@ -51,8 +51,14 @@ public class Constants {
                 public static final double elevatorHomedPosition = 0; // TODO SET
                 public static final double elevatorBottomPosition = 10; // TODO SET
                 public static final double elevatorMiddlePosition = 20; // TODO SET
-                public static final double elevatorTopPosition = 38; // TODO SET
+                public static final double elevatorTopPosition = 30; // TODO SET
                 public static final double elevatorHumanPlayerPosition = 20; // TODO SET
+
+                public static final double elevatorEncoderPositionConversionFactor = 100;
+                public static final double elevatorEncoderZeroOffset = 0.0;
+                public static final boolean elevatorEncoderInverted = true;
+
+
 
         }
 
@@ -68,15 +74,15 @@ public class Constants {
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
 
-                public static final double intakeHomedPosition = 190;
-                public static final double intakeFloorPosition = 76;
-                public static final double intakePlacingPositon = 205; // TODO SET
-                public static final double intakeScoringPositon = 190;
-                public static final double intakeIndexingPosition = 234;
-                public static final double intakeHumanPlayerPosition = 190;
+                public static final double intakeHomedPosition = 205;
+                public static final double intakeFloorPosition = 90;
+                public static final double intakePlacingPositon = 210; // TODO SET
+                public static final double intakeScoringPositon = 205;
+                public static final double intakeIndexingPosition = 248;
+                public static final double intakeHumanPlayerPosition = 205;
 
                 public static final double armEncoderPositionConversionFactor = 360;
-                public static final double armEncoderZeroOffset = 221.6194081;
+                public static final double armEncoderZeroOffset = 150.982;
                 public static final boolean armEncoderInverted = false;
         }
 

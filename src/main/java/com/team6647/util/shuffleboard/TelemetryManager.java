@@ -44,21 +44,21 @@ public class TelemetryManager extends BaseTelemetryManager {
     }
 
     public void setEventMap() {
-        DriveConstants.eventMap.put("intakeIn", AutoUtils.intakeConeSequence());
+        DriveConstants.eventMap.put("intakeIn", AutoUtils.autoIntakeConeSequence());
 
         switch (getGridPlacement()) {
             case Bottom:
-                DriveConstants.eventMap.put("placeCone", AutoUtils.placeConeSequence(ElevatorPositionState.BOTTOM));
-                DriveConstants.eventMap.put("placeCube", AutoUtils.placeCubeSequence(ElevatorPositionState.BOTTOM));
+                DriveConstants.eventMap.put("placeCone", AutoUtils.autoPlaceConeSequence(ElevatorPositionState.BOTTOM));
+                DriveConstants.eventMap.put("placeCube", AutoUtils.autoPlaceCubeSequence(ElevatorPositionState.BOTTOM));
                 break;
 
             case Middle:
-                DriveConstants.eventMap.put("placeCone", AutoUtils.placeConeSequence(ElevatorPositionState.MID));
-                DriveConstants.eventMap.put("placeCube", AutoUtils.placeCubeSequence(ElevatorPositionState.MID));
+                DriveConstants.eventMap.put("placeCone", AutoUtils.autoPlaceConeSequence(ElevatorPositionState.MID));
+                DriveConstants.eventMap.put("placeCube", AutoUtils.autoPlaceCubeSequence(ElevatorPositionState.MID));
                 break;
             case Top:
-                DriveConstants.eventMap.put("placeCone", AutoUtils.placeConeSequence(ElevatorPositionState.MAX));
-                DriveConstants.eventMap.put("placeCube", AutoUtils.placeCubeSequence(ElevatorPositionState.MAX));
+                DriveConstants.eventMap.put("placeCone", AutoUtils.autoPlaceConeSequence(ElevatorPositionState.MAX));
+                DriveConstants.eventMap.put("placeCube", AutoUtils.autoPlaceCubeSequence(ElevatorPositionState.MAX));
                 break;
         }
     }
