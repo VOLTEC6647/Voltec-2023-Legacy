@@ -96,7 +96,7 @@ public class RobotContainer extends SuperRobotContainer {
                 OperatorConstants.driverController2.povLeft().and(OperatorConstants.driverController2.a())
                                 .whileTrue(Commands.sequence(
                                                 new ExtendElevator(elevatorSubsystem, ElevatorPositionState.BOTTOM),
-                                                Commands.waitSeconds(1),
+                                                Commands.waitSeconds(2),
                                                 Commands.parallel(
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                                                                 new MoveArmIntake(armIntakeSubsystem,
@@ -109,70 +109,70 @@ public class RobotContainer extends SuperRobotContainer {
 
                                 .whileTrue(Commands.sequence(
                                                 new ExtendElevator(elevatorSubsystem, ElevatorPositionState.BOTTOM),
-                                                Commands.waitSeconds(1),
+                                                Commands.waitSeconds(2),
                                                 Commands.parallel(
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                                                                 new MoveArmIntake(armIntakeSubsystem,
                                                                                 RollerState.SPITTING))))
                                 .onFalse(Commands.parallel(
-                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED),
-                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED)));
+                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED)));
 
                 /* Middle Cone */
                 OperatorConstants.driverController2.povRight().and(OperatorConstants.driverController2.a()) // Cone
                                 .whileTrue(Commands.sequence(
                                                 new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MID),
-                                                Commands.waitSeconds(1),
+                                                Commands.waitSeconds(3),
 
                                                 Commands.parallel(
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                                                                 new MoveArmIntake(armIntakeSubsystem,
                                                                                 RollerState.COLLECTING))))
                                 .onFalse(Commands.parallel(
-                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED),
-                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED)));
+                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED)));
 
                 /* Middle Cube */
                 OperatorConstants.driverController2.povRight().and(OperatorConstants.driverController2.b()) // Cube
                                 .whileTrue(Commands.sequence(
                                                 new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MID),
-                                                Commands.waitSeconds(1),
+                                                Commands.waitSeconds(3),
 
                                                 Commands.parallel(
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                                                                 new MoveArmIntake(armIntakeSubsystem,
                                                                                 RollerState.SPITTING))))
                                 .onFalse(Commands.parallel(
-                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED),
-                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED)));
+                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED)));
 
                 /* Max Cone */
                 OperatorConstants.driverController2.povUp()
                                 .and(OperatorConstants.driverController2.a()) // Cone
                                 .whileTrue(Commands.sequence(
                                                 new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MAX),
-                                                Commands.waitSeconds(1),
+                                                Commands.waitSeconds(3),
                                                 Commands.parallel(
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                                                                 new MoveArmIntake(armIntakeSubsystem,
                                                                                 RollerState.COLLECTING))))
                                 .onFalse(Commands.parallel(
-                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED),
-                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED)));
+                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED)));
 
                 /* Max Cube */
                 OperatorConstants.driverController2.povUp()
                                 .and(OperatorConstants.driverController2.b()) // Cube
                                 .whileTrue(Commands.sequence(
                                                 new ExtendElevator(elevatorSubsystem, ElevatorPositionState.MAX),
-                                                Commands.waitSeconds(1),
+                                                Commands.waitSeconds(3),
                                                 Commands.parallel(
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                                                                 new MoveArmIntake(armIntakeSubsystem,
                                                                                 RollerState.SPITTING))))
                                 .onFalse(Commands.parallel(
-                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED),
-                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED)));
+                                                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                                                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED)));
 
                 /* Homes elevator */
                 OperatorConstants.driverController2.povDown()
@@ -184,7 +184,8 @@ public class RobotContainer extends SuperRobotContainer {
                                                 .sequence(new ToggleIntake(cubeintakeSubsystem),
                                                                 Commands.waitSeconds(0.3),
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
-                                                                AutoUtils.teleopIntakeCubeSequence(RollerState.COLLECTING)))
+                                                                AutoUtils.teleopIntakeCubeSequence(
+                                                                                RollerState.COLLECTING)))
                                 .onFalse(Commands.sequence(
                                                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
                                                 new ToggleIntake(cubeintakeSubsystem)));
@@ -195,7 +196,8 @@ public class RobotContainer extends SuperRobotContainer {
                                                 .sequence(new ToggleIntake(cubeintakeSubsystem),
                                                                 Commands.waitSeconds(0.4),
                                                                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
-                                                                AutoUtils.teleopIntakeCubeSequence(RollerState.SPITTING)))
+                                                                AutoUtils.teleopIntakeCubeSequence(
+                                                                                RollerState.SPITTING)))
                                 .onFalse(Commands.sequence(
                                                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
                                                 new ToggleIntake(cubeintakeSubsystem)));
