@@ -43,7 +43,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static AbsoluteEncoder elevatorEncoder;
 
   private static ProfiledPIDController elevatorController = new ProfiledPIDController(ElevatorConstants.elevatorKp,
-      ElevatorConstants.elevatorKi, ElevatorConstants.elevatorKd, new TrapezoidProfile.Constraints(40, 35));
+      ElevatorConstants.elevatorKi, ElevatorConstants.elevatorKd, new TrapezoidProfile.Constraints(120, 80));
 
   private static DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.elevatorSwitchID);
 
