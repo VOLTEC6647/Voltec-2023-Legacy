@@ -39,9 +39,9 @@ public class Constants {
                 public static final int leftMotorID = 15;
                 public static final int rightMotorID = 16;
 
-                public static final double elevatorKp = 0.06;
+                public static final double elevatorKp = 0.35;
                 public static final double elevatorKi = 0;
-                public static final double elevatorKd = 0.015;
+                public static final double elevatorKd = 0.0;
 
                 public static final int elevatorSwitchID = 1;
 
@@ -49,9 +49,9 @@ public class Constants {
                 public static final float maxElevatorSoftLimit = 38;
 
                 public static final double elevatorHomedPosition = 0; // TODO SET
-                public static final double elevatorBottomPosition = 10; // TODO SET
+                public static final double elevatorBottomPosition = 13; // TODO SET
                 public static final double elevatorMiddlePosition = 20; // TODO SET
-                public static final double elevatorTopPosition = 30; // TODO SET
+                public static final double elevatorTopPosition = 38; // TODO SET
                 public static final double elevatorHumanPlayerPosition = 20; // TODO SET
 
                 public static final double elevatorEncoderPositionConversionFactor = 100;
@@ -69,7 +69,7 @@ public class Constants {
 
                 public static final double pivotKp = 0.0035; // 0.0075
                 public static final double pivotKi = 0.0000000012;
-                public static final double pivotKd = 0;// 0.1; //0.1
+                public static final double pivotKd = 0.0;// 0.1; //0.1
 
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
@@ -77,7 +77,7 @@ public class Constants {
                 public static final double intakeHomedPosition = 205;
                 public static final double intakeFloorPosition = 90;
                 public static final double intakePlacingPositon = 210; // TODO SET
-                public static final double intakeScoringPositon = 205;
+                public static final double intakeScoringPositon = 210;
                 public static final double intakeIndexingPosition = 248;
                 public static final double intakeHumanPlayerPosition = 205;
 
