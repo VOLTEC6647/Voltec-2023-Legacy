@@ -1,15 +1,20 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
+/**
+ * Created by Juan Pablo Gutiérrez
+ * 
+ * Voltec 2023 Legacy
+ * 
+ * "If you're going to leave a mark, make it a legacy."
+ */
 package com.team6647;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
 public final class Main {
-  private Main() {}
+  private Main() {
+  }
 
   public static void main(String... args) {
     RobotBase.startRobot(Robot::new);
   }
 }
+
