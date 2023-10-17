@@ -43,7 +43,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static AbsoluteEncoder elevatorEncoder;
 
   private static ProfiledPIDController elevatorController = new ProfiledPIDController(ElevatorConstants.elevatorKp,
-      ElevatorConstants.elevatorKi, ElevatorConstants.elevatorKd, new TrapezoidProfile.Constraints(120, 80));
+      ElevatorConstants.elevatorKi, ElevatorConstants.elevatorKd, new TrapezoidProfile.Constraints(150, 150));
 
   private static DigitalInput limitSwitch = new DigitalInput(ElevatorConstants.elevatorSwitchID);
 
@@ -152,7 +152,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private void moveElevator() {
     double pidValue = elevatorController.calculate(getElevatorPosition(), setPoint);
 
-    pidValue = Functions.clamp(pidValue, -0.2, 0.2);
+    pidValue = Functions.clamp(pidValue, -0.4, 0.4);
     pidVal = pidValue;
 
     double total = pidValue * 12;
