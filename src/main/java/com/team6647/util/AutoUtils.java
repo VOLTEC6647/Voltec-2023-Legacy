@@ -115,7 +115,7 @@ public class AutoUtils {
     /* Spits the cone for intaking due to the inversed pulley system */
     public static Command autoIntakeConeSequence() {
         return Commands.sequence(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR),
-                new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING).withTimeout(1),
+                new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING).withTimeout(3),
                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED));
     }
 
