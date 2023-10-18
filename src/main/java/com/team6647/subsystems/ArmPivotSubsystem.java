@@ -14,6 +14,7 @@ import com.team6647.util.Constants.ArmIntakeConstants;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -28,6 +29,7 @@ public class ArmPivotSubsystem extends SubsystemBase {
   private static DoubleEntry armPositionDoubleEntry;
   private static DoubleEntry armPIDDoubleEntry;
   private static DoubleEntry armSetpointDoubleEntry;
+  private static BooleanEntry armInTolerance;
 
   public static SuperSparkMax armMotor1 = new SuperSparkMax(ArmIntakeConstants.armMotor1ID, GlobalIdleMode.brake,
       true, 80, ArmIntakeConstants.armEncoderPositionConversionFactor, ArmIntakeConstants.armEncoderZeroOffset,
@@ -47,12 +49,14 @@ public class ArmPivotSubsystem extends SubsystemBase {
 
   private ArmPivotSubsystem() {
     armEncoder = armMotor1.getAbsoluteEncoder(Type.kDutyCycle);
+    armController.setTolerance(10);
 
     armPivotTable = NetworkTableInstance.getDefault().getTable("ArmTable/Pivot");
     armStateEntry = armPivotTable.getStringTopic("ArmPivotState").getEntry(getArmState().toString());
     armPositionDoubleEntry = armPivotTable.getDoubleTopic("ArmPosition").getEntry(getArmPosition());
     armPIDDoubleEntry = armPivotTable.getDoubleTopic("ArmPID").getEntry(getPIDVal());
     armSetpointDoubleEntry = armPivotTable.getDoubleTopic("ArmSetpoint").getEntry(getSetpoint());
+    armInTolerance = armPivotTable.getBooleanTopic("InTolerance").getEntry(isInTolerance());
 
     resetPID();
   }
@@ -140,6 +144,11 @@ public class ArmPivotSubsystem extends SubsystemBase {
     armPositionDoubleEntry.set(getArmPosition());
     armPIDDoubleEntry.set(getPIDVal());
     armSetpointDoubleEntry.set(getSetpoint());
+    armInTolerance.set(isInTolerance());
+  }
+
+  public boolean isInTolerance(){
+    return armController.atGoal();
   }
 
   private double getArmPosition() {
