@@ -35,7 +35,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private static BooleanEntry elevatorLimitSwitchEntry;
 
   private static SuperSparkMax leftMotor = new SuperSparkMax(ElevatorConstants.leftMotorID, GlobalIdleMode.Coast, false,
-      80, ElevatorConstants.elevatorEncoderPositionConversionFactor, ElevatorConstants.elevatorEncoderZeroOffset, ElevatorConstants.elevatorEncoderInverted);
+      80, ElevatorConstants.elevatorEncoderPositionConversionFactor, ElevatorConstants.elevatorEncoderZeroOffset,
+      ElevatorConstants.elevatorEncoderInverted);
   private static SuperSparkMax rightMotor = new SuperSparkMax(ElevatorConstants.rightMotorID, GlobalIdleMode.Coast,
       true,
       80);
@@ -61,7 +62,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         .getEntry(getElevatorPositionState().toString());
     elevatorPIDStateEntry = elevatorTable.getStringTopic("ElevatorPIDState").getEntry(getElevatorState().toString());
     elevatorPositionEntry = elevatorTable.getDoubleTopic("ElevatorPosition").getEntry(getElevatorPosition());
-   elevatorEncoderPositionEntry = elevatorTable.getDoubleTopic("ElevatorEncoderPosition").getEntry(getElevatorEncoderPosition());
+    elevatorEncoderPositionEntry = elevatorTable.getDoubleTopic("ElevatorEncoderPosition")
+        .getEntry(getElevatorEncoderPosition());
     elevatorPIDEntry = elevatorTable.getDoubleTopic("ElevatorPID").getEntry(getPIDValue());
     elevatorSetpointEntry = elevatorTable.getDoubleTopic("ElevatorSetpoint").getEntry(getSetpoint());
     elevatorLimitSwitchEntry = elevatorTable.getBooleanTopic("ElevatorLimitSwitch").getEntry(getLimitState());
@@ -83,7 +85,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public enum ElevatorPositionState {
-    HOMED, BOTTOM, MID, MAX, HUMAN_PLAYER
+    FlOOR, HOMED, BOTTOM, MID, MAX, HUMAN_PLAYER
   }
 
   public enum ElevatorState {
@@ -102,6 +104,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     mPositionState = newState;
 
     switch (newState) {
+      case FlOOR:
+        changeSetpoint(ElevatorConstants.elevatorFloorPosition);
+        break;
       case HOMED:
         changeSetpoint(ElevatorConstants.elevatorHomedPosition);
         break;
@@ -219,7 +224,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     return leftMotor.getPosition();
   }
 
-  public double getElevatorEncoderPosition(){
+  public double getElevatorEncoderPosition() {
     return elevatorEncoder.getPosition();
   }
 

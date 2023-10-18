@@ -45,21 +45,19 @@ public class Constants {
 
                 public static final int elevatorSwitchID = 1;
 
-                
-                public static final double elevatorHomedPosition = 0;
+                public static final double elevatorFloorPosition = 0.0;
+                public static final double elevatorHomedPosition = 1;
                 public static final double elevatorBottomPosition = 13.3;
                 public static final double elevatorMiddlePosition = 22.19;
                 public static final double elevatorTopPosition = 38.71;
                 public static final double elevatorHumanPlayerPosition = 20;
-                
+
                 public static final float minElevatorSoftLimit = 0;
                 public static final float maxElevatorSoftLimit = (float) elevatorTopPosition;
 
                 public static final double elevatorEncoderPositionConversionFactor = 100;
                 public static final double elevatorEncoderZeroOffset = 0.0;
                 public static final boolean elevatorEncoderInverted = true;
-
-
 
         }
 
@@ -75,7 +73,7 @@ public class Constants {
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
 
-                public static final double intakeHomedPosition = 205;
+                public static final double intakeHomedPosition = 200;
                 public static final double intakeFloorPosition = 88;
                 public static final double intakePlacingPositon = 215;
                 public static final double intakeScoringPositon = 200;
@@ -107,5 +105,11 @@ public class Constants {
                 public static final double intakeSpeed = 0.7;
 
                 public static final int beamBrakePort = 0;
+        }
+
+        public static class VisionConstants {
+                public static final int aprilLimePipe = 0;
+                public static final int retroLimePipe = 0;
+
         }
 }
