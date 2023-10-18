@@ -47,9 +47,9 @@ public class Constants {
 
                 
                 public static final double elevatorHomedPosition = 0;
-                public static final double elevatorBottomPosition = 13;
-                public static final double elevatorMiddlePosition = 24;
-                public static final double elevatorTopPosition = 44.9;
+                public static final double elevatorBottomPosition = 13.3;
+                public static final double elevatorMiddlePosition = 22.19;
+                public static final double elevatorTopPosition = 38.71;
                 public static final double elevatorHumanPlayerPosition = 20;
                 
                 public static final float minElevatorSoftLimit = 0;
@@ -68,17 +68,17 @@ public class Constants {
                 public static final int armMotor2ID = 18;
                 public static final int intakeMotorID = 20;
 
-                public static final double pivotKp = 0.0035; // 0.0075
+                public static final double pivotKp = 0.0035;
                 public static final double pivotKi = 0.0000000012;
-                public static final double pivotKd = 0.0;// 0.1; //0.1
+                public static final double pivotKd = 0.0;
 
                 public static final double intakeSpeed = 0.3;
                 public static final int beamBrakePort = 2;
 
                 public static final double intakeHomedPosition = 205;
                 public static final double intakeFloorPosition = 88;
-                public static final double intakePlacingPositon = 210; // TODO SET
-                public static final double intakeScoringPositon = 210;
+                public static final double intakePlacingPositon = 215;
+                public static final double intakeScoringPositon = 200;
                 public static final double intakeIndexingPosition = 248;
                 public static final double intakeHumanPlayerPosition = 205;
 
@@ -95,8 +95,8 @@ public class Constants {
                 public static final double intakeKi = 0.0;
                 public static final double intakeKd = 0.0;
 
-                public static final double intakeHomedPosition = 73;
-                public static final double intakeExtendedPosition = 96;
+                public static final double intakeHomedPosition = 42;
+                public static final double intakeExtendedPosition = 59;
 
                 public static final double minIntakePosition = intakeHomedPosition + 1;
                 public static final double maxIntakePosition = intakeExtendedPosition + 1;
