@@ -35,7 +35,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
   private static AbsoluteEncoder pivotEncoder;
 
   private static ProfiledPIDController pivotController = new ProfiledPIDController(IntakeConstants.intakeKp,
-      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(120, 120));
+      IntakeConstants.intakeKi, IntakeConstants.intakeKd, new TrapezoidProfile.Constraints(140, 140));
 
   private double setpoint = IntakeConstants.intakeHomedPosition;
   private PivotState mPivotState = PivotState.HOMED;
