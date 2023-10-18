@@ -7,9 +7,9 @@ package com.team6647.commands.hybrid.arm;
 import com.team6647.subsystems.ArmPivotSubsystem;
 import com.team6647.subsystems.ArmPivotSubsystem.ArmPivotState;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class MoveArm extends InstantCommand {
+public class MoveArm extends CommandBase {
   private ArmPivotSubsystem armPivotSubsystem;
   private ArmPivotState armPivotState;
 
@@ -23,5 +23,9 @@ public class MoveArm extends InstantCommand {
   @Override
   public void initialize() {
     armPivotSubsystem.changeArmState(armPivotState);
+  }
+
+  public boolean isFinished(){
+    return armPivotSubsystem.isInTolerance();
   }
 }
