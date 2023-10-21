@@ -16,16 +16,18 @@ public class AutoModeSelector {
         Top,
         Middle,
         Bottom,
-        OnlyPiece,
+        OnlyPieceCone,
+        OnlyPieceCube,
         DoNothimg,
         LeaveCommunity
     }
 
     public AutoModeSelector() {
         autoChooser.setDefaultOption("Top auto", AutoSelection.Top);
-        autoChooser.setDefaultOption("Middle auto", AutoSelection.Top);
-        autoChooser.setDefaultOption("Bottom auto", AutoSelection.Top);
-        autoChooser.setDefaultOption("Only Piece auto", AutoSelection.OnlyPiece);
+        autoChooser.setDefaultOption("Middle auto", AutoSelection.Middle);
+        autoChooser.setDefaultOption("Bottom auto", AutoSelection.Bottom);
+        autoChooser.setDefaultOption("Only Piece Cone auto", AutoSelection.OnlyPieceCone);
+        autoChooser.setDefaultOption("Only Piece Cube auto", AutoSelection.OnlyPieceCube);
         autoChooser.setDefaultOption("Do nothing auto", AutoSelection.DoNothimg);
         autoChooser.setDefaultOption("Leave Community auto", AutoSelection.LeaveCommunity);
 

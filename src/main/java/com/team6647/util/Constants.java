@@ -41,7 +41,7 @@ public class Constants {
 
                 public static final double elevatorKp = 0.3;
                 public static final double elevatorKi = 0;
-                public static final double elevatorKd = 0.0;
+                public static final double elevatorKd = 0;
 
                 public static final int elevatorSwitchID = 1;
 
@@ -93,7 +93,7 @@ public class Constants {
                 public static final double intakeKi = 0.0;
                 public static final double intakeKd = 0.0;
 
-                public static final double intakeHomedPosition = 42;
+                public static final double intakeHomedPosition = 39;
                 public static final double intakeExtendedPosition = 59;
 
                 public static final double minIntakePosition = intakeHomedPosition + 1;
@@ -108,8 +108,19 @@ public class Constants {
         }
 
         public static class VisionConstants {
-                public static final int aprilLimePipe = 0;
-                public static final int retroLimePipe = 0;
+                public static final double kPdrive = 0.01;
+                public static final double kIdrive = 0.0;
+                public static final double kDdrive = 0.0;
 
+                public static final double kPstrafe = 0.01;
+                public static final double kIstrafe = 0.0;
+                public static final double kDstrafe = 0.0;
+
+                public static final double kProt = 0.01;
+                public static final double kIrot = 0.0;
+                public static final double kDrot = 0.0;
+
+                public static final int aprilLimePipe = 0;
+                public static final int retroLimePipe = 2;
         }
 }

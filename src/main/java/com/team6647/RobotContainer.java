@@ -10,16 +10,19 @@ import com.andromedalib.andromedaSwerve.utils.AndromedaMap;
 import com.andromedalib.andromedaSwerve.utils.AndromedaProfileConfig;
 import com.andromedalib.andromedaSwerve.utils.AndromedaProfileConfig.AndromedaProfiles;
 import com.andromedalib.robot.SuperRobotContainer;
-import com.team6647.commands.hybrid.Intake.ToggleIntake;
+import com.team6647.commands.hybrid.Intake.MovePivotIntake;
 import com.team6647.commands.hybrid.arm.MoveArm;
+import com.team6647.commands.hybrid.arm.MoveArmIntake;
 import com.team6647.commands.hybrid.elevator.ExtendElevator;
 import com.team6647.subsystems.ArmIntakeSubsytem;
 import com.team6647.subsystems.ArmPivotSubsystem;
 import com.team6647.subsystems.AutoDriveSubsystem;
 import com.team6647.subsystems.ElevatorSubsystem;
 import com.team6647.subsystems.IntakePivotSubsystem;
+import com.team6647.subsystems.VisionSubsystem;
 import com.team6647.subsystems.ArmPivotSubsystem.ArmPivotState;
 import com.team6647.subsystems.ElevatorSubsystem.ElevatorPositionState;
+import com.team6647.subsystems.IntakePivotSubsystem.PivotState;
 import com.team6647.subsystems.IntakeSubsystem.RollerState;
 import com.team6647.util.AutoUtils;
 import com.team6647.util.Constants.OperatorConstants;
@@ -39,6 +42,7 @@ public class RobotContainer extends SuperRobotContainer {
         private ElevatorSubsystem elevatorSubsystem;
         private ArmIntakeSubsytem armIntakeSubsystem;
         private ArmPivotSubsystem armPivotSubsystem;
+        private VisionSubsystem visionSubsystem;
 
         private RobotContainer() {
         }
@@ -70,10 +74,12 @@ public class RobotContainer extends SuperRobotContainer {
                 elevatorSubsystem = ElevatorSubsystem.getInstance();
                 armIntakeSubsystem = ArmIntakeSubsytem.getInstance();
                 armPivotSubsystem = ArmPivotSubsystem.getInstance();
+                visionSubsystem = VisionSubsystem.getInstance();
 
                 /* Removes unused variable warning */
                 autoDriveSubsystem.getClass();
                 armIntakeSubsystem.getClass();
+                visionSubsystem.getClass();
         }
 
         @Override
@@ -90,6 +96,7 @@ public class RobotContainer extends SuperRobotContainer {
 
                 OperatorConstants.driverController1.a()
                                 .whileTrue(new RunCommand(() -> andromedaSwerve.resetNavx(), andromedaSwerve));
+
                 /* Driver Controller 2 */
 
                 /* Bottom Cone */
@@ -127,36 +134,48 @@ public class RobotContainer extends SuperRobotContainer {
 
                 /* Homes elevator */
                 OperatorConstants.driverController2.povDown()
-                                .whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
+                                .whileTrue(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.FlOOR));
+
+                /* Human Player */
+                OperatorConstants.driverController2.rightBumper()
+                                .whileTrue(new MoveArmIntake(armIntakeSubsystem, RollerState.COLLECTING))
+                                .onFalse(new MoveArmIntake(armIntakeSubsystem, RollerState.STOPPED));
+
+                OperatorConstants.driverController2.leftBumper()
+                                .whileTrue(new MoveArmIntake(armIntakeSubsystem, RollerState.COLLECTING))
+                                .onFalse(new MoveArmIntake(armIntakeSubsystem, RollerState.STOPPED));
 
                 /* Intake Collecting */
 
                 OperatorConstants.driverController2.x().and(OperatorConstants.driverController2.leftTrigger())
                                 .whileTrue(Commands
-                                                .sequence(new ToggleIntake(cubeintakeSubsystem),
+                                                .sequence(new MovePivotIntake(cubeintakeSubsystem, PivotState.EXTENDED),
                                                                 Commands.waitSeconds(0.4),
                                                                 AutoUtils.teleopIntakeCubeSequence(
                                                                                 RollerState.COLLECTING)))
                                 .onFalse(Commands.sequence(
                                                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
-                                                new ToggleIntake(cubeintakeSubsystem)));
+                                                new MoveArmIntake(armIntakeSubsystem, RollerState.STOPPED),
+                                                new MovePivotIntake(cubeintakeSubsystem, PivotState.HOMED)));
 
                 /* Intake Spitting */
 
                 OperatorConstants.driverController2.x().and(OperatorConstants.driverController2.rightTrigger())
                                 .whileTrue(Commands
-                                                .sequence(new ToggleIntake(cubeintakeSubsystem),
+                                                .sequence(new MovePivotIntake(cubeintakeSubsystem, PivotState.EXTENDED),
                                                                 Commands.waitSeconds(0.4),
                                                                 AutoUtils.teleopIntakeCubeSequence(
                                                                                 RollerState.SPITTING)))
                                 .onFalse(Commands.sequence(
                                                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
-                                                new ToggleIntake(cubeintakeSubsystem)));
+                                                new MoveArmIntake(armIntakeSubsystem, RollerState.STOPPED),
+                                                new MovePivotIntake(cubeintakeSubsystem, PivotState.HOMED)));
 
                 /* Floor Cone Intake  */
                 OperatorConstants.driverController2.y()
                                 .whileTrue(AutoUtils.teleopConeIntakeSequence())
-                                .onFalse(new MoveArm(armPivotSubsystem, ArmPivotState.HOMED));
+                                .onFalse(new MoveArm(armPivotSubsystem, ArmPivotState.HOMED)
+                                                .alongWith(new MoveArmIntake(armIntakeSubsystem, RollerState.STOPPED)));
 
         }
 

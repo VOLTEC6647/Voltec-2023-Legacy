@@ -13,12 +13,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 /**
  * Toggles the intake pivot between extended and homed.
  */
-public class ToggleIntake extends InstantCommand {
+public class MovePivotIntake extends InstantCommand {
   private IntakePivotSubsystem cubeintakeSubsystem;
+  private PivotState pivotState;
 
   /** Creates a new ToggleIntake. */
-  public ToggleIntake(IntakePivotSubsystem cubeintakeSubsystem) {
+  public MovePivotIntake(IntakePivotSubsystem cubeintakeSubsystem, PivotState newState) {
     this.cubeintakeSubsystem = cubeintakeSubsystem;
+
+    this.pivotState = newState;
 
     addRequirements(cubeintakeSubsystem);
   }
@@ -26,7 +29,7 @@ public class ToggleIntake extends InstantCommand {
   @Override
   public void initialize() {
     cubeintakeSubsystem.resetPID();
-    PivotState newState = (cubeintakeSubsystem.getPivotState() == PivotState.HOMED) ? PivotState.EXTENDED : PivotState.HOMED;
-    cubeintakeSubsystem.changePivotState(newState);
+
+    cubeintakeSubsystem.changePivotState(pivotState);
   }
 }

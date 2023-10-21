@@ -33,6 +33,7 @@ public class AutoBalance extends CommandBase {
   @Override
   public void execute() {
     currentAngle = autoDriveSubsystem.getNavxRoll();
+    SmartDashboard.putNumber("Angle", currentAngle);
     error = DriveConstants.balanceGoal - currentAngle;
 
     drivePower = -Math.min(DriveConstants.balanceKp * error, 1);
@@ -46,12 +47,12 @@ public class AutoBalance extends CommandBase {
     if (Math.abs(drivePower) > 0.35) {
       drivePower = Math.copySign(0.35, drivePower);
     }
-    swerve.drive(new Translation2d(drivePower, 0), currentAngle, false, true);
+    swerve.drive(new Translation2d(drivePower, 0), 0.5, false, true);
   }
 
   @Override
   public void end(boolean interrupted) {
-    swerve.drive(new Translation2d(1, 1), currentAngle, false, true);
+    swerve.drive(new Translation2d(), 0.5, false, true);
   }
 
   @Override

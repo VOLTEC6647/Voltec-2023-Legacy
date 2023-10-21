@@ -19,10 +19,10 @@ public class AutonomousPaths extends AutoUtils {
     }
 
     public static Command middleAuto() {
-        return Commands.sequence(new SwerveDriveCommand(AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> -0.5,
-                () -> 0, () -> false).withTimeout(3),
+        return Commands.sequence( new SwerveDriveCommand(AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> -0.5,
+                () -> 0, () -> true).withTimeout(2.5),
                 new SwerveDriveCommand(AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> 0.5,
-                        () -> 0, () -> false).withTimeout(2),
+                        () -> 0, () -> true).withTimeout(2),
                 new AutoBalance(AndromedaSwerve.getInstance(null, null), autoDriveSubsystem));
     }
 

@@ -15,10 +15,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.team6647.util.Constants.DriveConstants;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,8 +25,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AutoDriveSubsystem extends SubsystemBase {
@@ -82,7 +78,7 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * @return Navx Roll
    */
   public double getNavxRoll() {
-    return navx.getRoll();
+    return navx.getPitch();
   }
 
   /**
@@ -126,43 +122,16 @@ public class AutoDriveSubsystem extends SubsystemBase {
     poseEstimator.resetPosition(swerve.getSwerveAngle(), swerve.getPositions(), pose);
   }
 
-  /**
-   * Created a new command that follows a defined PathPlanner Trajectory
-   * 
-   * @param trajectory  Trajectory to follow
-   * @param isFirstPath If true, it will reset the odometry
-   * @return FollowTrajectory Command to follow
-   */
-  public Command followTrajectoryCommand(PathPlannerTrajectory trajectory, boolean isFirstPath) {
-    return new SequentialCommandGroup(
-        new InstantCommand(() -> {
-          if (isFirstPath) {
-            this.resetOdometry(trajectory.getInitialHolonomicPose());
-          }
-        }),
-
-        new PPSwerveControllerCommand(
-            trajectory,
-            this::getPose,
-            SwerveConstants.swerveKinematics,
-            new PIDController(1, 0, 0),
-            new PIDController(1, 0, 0),
-            new PIDController(1.75, 0, 0),
-            swerve::setModuleStates,
-            true,
-            swerve));
-
-  }
-
   public Command getFullAuto(String pathName) {
 
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, new PathConstraints(5, 5));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, new PathConstraints(1.5, 2),
+        new PathConstraints(3, 2));
 
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
         this::getPose,
         this::resetOdometry,
         SwerveConstants.swerveKinematics,
-        new PIDConstants(1.5, 0.0, 0.0),
+        new PIDConstants(1.7, 0.0, 0.0),
         new PIDConstants(2, 0.0, 0.0),
         swerve::setModuleStates,
         DriveConstants.eventMap,

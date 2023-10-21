@@ -45,6 +45,7 @@ public class TelemetryManager extends BaseTelemetryManager {
 
     public void setEventMap() {
         DriveConstants.eventMap.put("intakeIn", AutoUtils.autoIntakeConeSequence());
+        DriveConstants.eventMap.put("intakeHome", AutoUtils.teleopHomeSequence());
 
         switch (getGridPlacement()) {
             case Bottom:

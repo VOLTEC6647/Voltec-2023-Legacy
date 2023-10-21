@@ -25,6 +25,7 @@ import com.team6647.util.shuffleboard.GridPlacementSelector.GridPlacement;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class AutoUtils {
 
@@ -59,8 +60,10 @@ public class AutoUtils {
                 return Commands.waitSeconds(0.1);
             case LeaveCommunity:
                 return AutonomousPaths.leaveCommunityAuto();
-            case OnlyPiece:
+            case OnlyPieceCone:
                 return getGridPlacement(Piece.Cone);
+            case OnlyPieceCube:
+                return getGridPlacement(Piece.Cube);
             default:
                 return Commands.waitSeconds(0.1);
         }
@@ -99,7 +102,8 @@ public class AutoUtils {
 
     /* Teleop */
     public static Command teleopIntakeCubeSequence(RollerState rollerState) {
-        return Commands.parallel(new MoveIntake(intakeSubsystem, rollerState),
+        return Commands.parallel(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.FlOOR),
+                new MoveIntake(intakeSubsystem, rollerState),
                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
                 new MoveArmIntake(armIntakeSubsystem, rollerState));
     }
@@ -114,6 +118,7 @@ public class AutoUtils {
     public static Command teleopHomeSequence() {
         return Commands.sequence(
                 new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
+                new MoveArmIntake(armIntakeSubsystem, RollerState.STOPPED).withTimeout(0.1),
                 Commands.waitSeconds(0.3),
                 new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
     }
@@ -134,25 +139,33 @@ public class AutoUtils {
 
     /* Spits the cone for intaking due to the inversed pulley system */
     public static Command autoIntakeConeSequence() {
-        return Commands.sequence(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR),
-                new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING).withTimeout(3),
-                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED));
+        return new ExtendElevator(elevatorSubsystem, ElevatorPositionState.FlOOR)
+                .alongWith(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR))
+                .andThen(new RunCommand(() -> armIntakeSubsystem.changeRollerState(RollerState.SPITTING),
+                        armIntakeSubsystem));
     }
 
     public static Command autoPlaceConeSequence(ElevatorPositionState elevatorState) {
-        return Commands.sequence(new ExtendElevator(elevatorSubsystem, elevatorState),
-                Commands.parallel(new MoveArm(armPivotSubsystem, ArmPivotState.SCORING),
-                        new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING)).withTimeout(2),
-                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
-                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
+        return Commands.sequence(
+                new ExtendElevator(elevatorSubsystem, elevatorState),
+                new MoveArm(armPivotSubsystem, ArmPivotState.SCORING),
+                Commands.waitSeconds(0.5),
+                Commands.sequence(
+                        new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
+                        Commands.waitSeconds(0.5),
+                        new MoveArmIntake(armIntakeSubsystem, RollerState.COLLECTING)).withTimeout(2),
+                teleopHomeSequence());
     }
 
     public static Command autoPlaceCubeSequence(ElevatorPositionState elevatorState) {
         return Commands.sequence(new ExtendElevator(elevatorSubsystem, elevatorState),
-                Commands.parallel(
+                new MoveArm(armPivotSubsystem, ArmPivotState.SCORING),
+                Commands.waitSeconds(0.5),
+                Commands.sequence(
+                        new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
+                        Commands.waitSeconds(0.5),
                         new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING)).withTimeout(2),
-                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
-                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
+                teleopHomeSequence());
     }
 
 }
