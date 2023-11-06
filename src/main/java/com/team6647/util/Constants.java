@@ -46,11 +46,13 @@ public class Constants {
                 public static final int elevatorSwitchID = 1;
 
                 public static final double elevatorFloorPosition = 0.0;
-                public static final double elevatorHomedPosition = 1;
+                public static final double elevatorHomedPosition = 0.0;
                 public static final double elevatorBottomPosition = 13.3;
-                public static final double elevatorMiddlePosition = 22.19;
+                public static final double elevatorMiddlePosition = 23.19;
                 public static final double elevatorTopPosition = 38.71;
-                public static final double elevatorHumanPlayerPosition = 20;
+                public static final double elevatorMiddleConePosition = 30.19;
+                public static final double elevatorTopConePosition = 52.71;
+                public static final double elevatorHumanPlayerPosition = 18.857117;
 
                 public static final float minElevatorSoftLimit = 0;
                 public static final float maxElevatorSoftLimit = (float) elevatorTopPosition;
@@ -71,6 +73,7 @@ public class Constants {
                 public static final double pivotKd = 0.0;
 
                 public static final double intakeSpeed = 0.3;
+                public static final double passiveStopped = 0.08;
                 public static final int beamBrakePort = 2;
 
                 public static final double intakeHomedPosition = 200;
@@ -78,7 +81,7 @@ public class Constants {
                 public static final double intakePlacingPositon = 215;
                 public static final double intakeScoringPositon = 200;
                 public static final double intakeIndexingPosition = 248;
-                public static final double intakeHumanPlayerPosition = 205;
+                public static final double intakeHumanPlayerPosition = 248;
 
                 public static final double armEncoderPositionConversionFactor = 360;
                 public static final double armEncoderZeroOffset = 150.982;

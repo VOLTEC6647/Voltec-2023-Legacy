@@ -19,11 +19,12 @@ public class AutonomousPaths extends AutoUtils {
     }
 
     public static Command middleAuto() {
-        return Commands.sequence( new SwerveDriveCommand(AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> -0.5,
-                () -> 0, () -> true).withTimeout(2.5),
-                new SwerveDriveCommand(AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> 0.5,
-                        () -> 0, () -> true).withTimeout(2),
-                new AutoBalance(AndromedaSwerve.getInstance(null, null), autoDriveSubsystem));
+        return Commands.sequence(
+                getGridPlacement(Piece.Cube),
+                new SwerveDriveCommand(
+                        AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> -0.7, () -> 0.0, () -> true)
+                        .withTimeout(1),
+                new MuBalance(AndromedaSwerve.getInstance(null, null), autoDriveSubsystem));
     }
 
     public static Command bottomAuto() {
@@ -31,7 +32,10 @@ public class AutonomousPaths extends AutoUtils {
     }
 
     public static Command leaveCommunityAuto() {
-        return Commands.sequence(getGridPlacement(Piece.Cone), new SwerveDriveCommand(
-                AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> 0.5, () -> 0.0, () -> false));
+        return Commands.sequence(getGridPlacement(Piece.Cube), new SwerveDriveCommand(
+                AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> -0.7, () -> 0.0, () -> true).withTimeout(.75),
+                new SwerveDriveCommand(
+                        AndromedaSwerve.getInstance(null, null), () -> 0.0, () -> -0.25, () -> 0.0, () -> true)
+                        .withTimeout(2));
     }
 }

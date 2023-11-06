@@ -13,13 +13,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoBalance extends CommandBase {
+public class MuBalance extends CommandBase {
   private AndromedaSwerve swerve;
   private AutoDriveSubsystem autoDriveSubsystem;
 
   double drivePower, currentAngle, error = 0;
 
-  public AutoBalance(AndromedaSwerve swerve, AutoDriveSubsystem autoDriveSubsystem) {
+  boolean isDecreasing = false;
+
+  public MuBalance(AndromedaSwerve swerve, AutoDriveSubsystem autoDriveSubsystem) {
     this.swerve = swerve;
     this.autoDriveSubsystem = autoDriveSubsystem;
 
@@ -28,10 +30,12 @@ public class AutoBalance extends CommandBase {
 
   @Override
   public void initialize() {
-  }
+    isDecreasing = false;
+  } 
 
   @Override
   public void execute() {
+    /* 
     currentAngle = autoDriveSubsystem.getNavxPitch();
     SmartDashboard.putNumber("Angle", currentAngle);
     error = DriveConstants.balanceGoal - currentAngle;
@@ -48,6 +52,17 @@ public class AutoBalance extends CommandBase {
       drivePower = Math.copySign(0.35, drivePower);
     }
     swerve.drive(new Translation2d(drivePower, 0), 0, false, true);
+    */
+
+    swerve.drive(new Translation2d(-0.75, 0), 0, true, true);
+
+    if(Math.abs(autoDriveSubsystem.getNavxPitch()) < 9.4)
+        isDecreasing = true;
+  }
+
+  @Override
+  public boolean isFinished() {
+      return isDecreasing;
   }
 
   @Override
@@ -55,8 +70,4 @@ public class AutoBalance extends CommandBase {
     swerve.drive(new Translation2d(), 0.5, false, true);
   }
 
-  @Override
-  public boolean isFinished() {
-    return (Math.abs(error) < DriveConstants.balanceTolerance);
-  }
 }

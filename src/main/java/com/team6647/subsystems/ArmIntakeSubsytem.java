@@ -51,6 +51,14 @@ public class ArmIntakeSubsytem extends SubsystemBase {
 
   public void changeRollerState(RollerState rollerState) {
     switch (rollerState) {
+      case CONE_STOPPED:
+        mState = RollerState.CONE_STOPPED;
+        setIntakeSpeed(-ArmIntakeConstants.passiveStopped);
+        break;
+      case CUBE_STOPPED:
+        mState = RollerState.CUBE_STOPPED;
+        setIntakeSpeed(ArmIntakeConstants.passiveStopped);
+        break;
       case STOPPED:
         mState = RollerState.STOPPED;
         setIntakeSpeed(0);

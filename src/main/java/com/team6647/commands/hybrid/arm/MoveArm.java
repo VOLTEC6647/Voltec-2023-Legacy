@@ -25,7 +25,11 @@ public class MoveArm extends CommandBase {
     armPivotSubsystem.changeArmState(armPivotState);
   }
 
-  public boolean isFinished(){
+  
+  @Override
+  public boolean isFinished() {
     return armPivotSubsystem.isInTolerance();
   }
+
+
 }

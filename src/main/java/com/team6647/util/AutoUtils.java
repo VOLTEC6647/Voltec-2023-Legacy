@@ -9,7 +9,7 @@ import com.team6647.commands.auto.AutonomousPaths;
 import com.team6647.commands.hybrid.Intake.MoveIntake;
 import com.team6647.commands.hybrid.arm.MoveArm;
 import com.team6647.commands.hybrid.arm.MoveArmIntake;
-import com.team6647.commands.hybrid.elevator.ExtendElevator;
+import com.team6647.commands.hybrid.elevator.MoveElevator;
 import com.team6647.subsystems.ArmIntakeSubsytem;
 import com.team6647.subsystems.ArmPivotSubsystem;
 import com.team6647.subsystems.AutoDriveSubsystem;
@@ -102,32 +102,41 @@ public class AutoUtils {
 
     /* Teleop */
     public static Command teleopIntakeCubeSequence(RollerState rollerState) {
-        return Commands.parallel(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.FlOOR),
-                new MoveIntake(intakeSubsystem, rollerState),
+        return Commands.sequence(new MoveElevator(elevatorSubsystem, armPivotSubsystem, ElevatorPositionState.FlOOR),
+                Commands.parallel(new MoveIntake(intakeSubsystem, rollerState),
+                        Commands.print("AAAA"),
+                        new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
+                        new MoveArmIntake(armIntakeSubsystem, rollerState)));
+    }
+
+    /* Teleop */
+    public static Command teleopSpitCubeSequence(RollerState rollerState) {
+        return Commands.sequence(new MoveElevator(elevatorSubsystem, armPivotSubsystem, ElevatorPositionState.FlOOR),
                 new MoveArm(armPivotSubsystem, ArmPivotState.INDEXING),
-                new MoveArmIntake(armIntakeSubsystem, rollerState));
+                Commands.parallel(new MoveIntake(intakeSubsystem, rollerState),
+                        Commands.print("AAAA"),
+                        new MoveArmIntake(armIntakeSubsystem, rollerState)));
     }
 
     /* Spits the cone for intaking due to the inversed pulley system */
     public static Command teleopConeIntakeSequence() {
-        return Commands.sequence(new ExtendElevator(elevatorSubsystem, ElevatorPositionState.FlOOR),
+        return Commands.sequence(new MoveElevator(elevatorSubsystem, armPivotSubsystem, ElevatorPositionState.FlOOR),
                 new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR),
                 new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING));
     }
 
     public static Command teleopHomeSequence() {
         return Commands.sequence(
-                new MoveArm(armPivotSubsystem, ArmPivotState.HOMED),
                 new MoveArmIntake(armIntakeSubsystem, RollerState.STOPPED).withTimeout(0.1),
-                Commands.waitSeconds(0.3),
-                new ExtendElevator(elevatorSubsystem, ElevatorPositionState.HOMED));
+                Commands.waitSeconds(0.5),
+                new MoveElevator(elevatorSubsystem, armPivotSubsystem, ElevatorPositionState.HOMED));
     }
 
     public static Command teleopPlaceConeSequence(ElevatorPositionState elevatorPosition, RollerState rollerState) {
         return Commands.sequence(
-                new ExtendElevator(elevatorSubsystem, elevatorPosition),
+                new MoveElevator(elevatorSubsystem, armPivotSubsystem, elevatorPosition),
                 new MoveArm(armPivotSubsystem, ArmPivotState.SCORING),
-                Commands.waitSeconds(0.5),
+                Commands.waitSeconds(0.1),
                 Commands.sequence(
                         new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                         Commands.waitSeconds(0.5),
@@ -139,17 +148,17 @@ public class AutoUtils {
 
     /* Spits the cone for intaking due to the inversed pulley system */
     public static Command autoIntakeConeSequence() {
-        return new ExtendElevator(elevatorSubsystem, ElevatorPositionState.FlOOR)
-                .alongWith(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR))
+        return new MoveElevator(elevatorSubsystem, armPivotSubsystem, ElevatorPositionState.FlOOR)
+                .andThen(new MoveArm(armPivotSubsystem, ArmPivotState.FLOOR))
                 .andThen(new RunCommand(() -> armIntakeSubsystem.changeRollerState(RollerState.SPITTING),
                         armIntakeSubsystem));
     }
 
     public static Command autoPlaceConeSequence(ElevatorPositionState elevatorState) {
         return Commands.sequence(
-                new ExtendElevator(elevatorSubsystem, elevatorState),
+                new MoveElevator(elevatorSubsystem, armPivotSubsystem, elevatorState),
                 new MoveArm(armPivotSubsystem, ArmPivotState.SCORING),
-                Commands.waitSeconds(0.5),
+                Commands.waitSeconds(0.7),
                 Commands.sequence(
                         new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
                         Commands.waitSeconds(0.5),
@@ -158,13 +167,11 @@ public class AutoUtils {
     }
 
     public static Command autoPlaceCubeSequence(ElevatorPositionState elevatorState) {
-        return Commands.sequence(new ExtendElevator(elevatorSubsystem, elevatorState),
+        return Commands.sequence(new MoveElevator(elevatorSubsystem, armPivotSubsystem, elevatorState),
                 new MoveArm(armPivotSubsystem, ArmPivotState.SCORING),
-                Commands.waitSeconds(0.5),
-                Commands.sequence(
-                        new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
-                        Commands.waitSeconds(0.5),
-                        new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING)).withTimeout(2),
+                new MoveArm(armPivotSubsystem, ArmPivotState.PLACING),
+                new MoveArmIntake(armIntakeSubsystem, RollerState.SPITTING),
+                Commands.waitSeconds(1.5),
                 teleopHomeSequence());
     }
 

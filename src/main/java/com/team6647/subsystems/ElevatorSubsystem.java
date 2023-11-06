@@ -57,6 +57,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   private ElevatorSubsystem() {
     elevatorEncoder = leftMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
+    elevatorController.setTolerance(5);
+
     elevatorTable = NetworkTableInstance.getDefault().getTable("ElevatorTable");
     elevatorPositionStateEntry = elevatorTable.getStringTopic("ElevatorPositionState")
         .getEntry(getElevatorPositionState().toString());
@@ -85,7 +87,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public enum ElevatorPositionState {
-    FlOOR, HOMED, BOTTOM, MID, MAX, HUMAN_PLAYER
+    FlOOR, HOMED, BOTTOM, MID, MAX, HUMAN_PLAYER, MID_CONE, MAX_CONE
   }
 
   public enum ElevatorState {
@@ -119,6 +121,12 @@ public class ElevatorSubsystem extends SubsystemBase {
       case MAX:
         changeSetpoint(ElevatorConstants.elevatorTopPosition);
         break;
+      case MID_CONE:
+        changeSetpoint(ElevatorConstants.elevatorMiddleConePosition);
+        break;
+      case MAX_CONE:
+        changeSetpoint(ElevatorConstants.elevatorTopConePosition);
+        break;
       case HUMAN_PLAYER:
         changeSetpoint(ElevatorConstants.elevatorHumanPlayerPosition);
         break;
@@ -143,11 +151,15 @@ public class ElevatorSubsystem extends SubsystemBase {
    * @param newValue the new setpoint
    */
   private void changeSetpoint(double newValue) {
-    if (newValue < ElevatorConstants.minElevatorSoftLimit || newValue > ElevatorConstants.maxElevatorSoftLimit) {
+    if (newValue < ElevatorConstants.minElevatorSoftLimit || newValue > ElevatorConstants.elevatorTopConePosition) {
       newValue = Functions.clamp(newValue, ElevatorConstants.minElevatorSoftLimit,
           ElevatorConstants.maxElevatorSoftLimit);
     }
     setPoint = newValue;
+  }
+
+  public void manualMovement(double newVal) {
+    changeSetpoint(setPoint += newVal);
   }
 
   /**
@@ -198,6 +210,10 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public void resetEncoderToAbsolute() {
     leftMotor.setPosition(getElevatorEncoderPosition());
+  }
+
+  public boolean isInTolerance() {
+    return elevatorController.atGoal();
   }
 
   /* Telemetry */

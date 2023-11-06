@@ -28,7 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   private IntakeSubsystem() {
     intakeRollerTable = NetworkTableInstance.getDefault().getTable("IntakeTable/Roller");
-    intakeRollerStateEntry = intakeRollerTable.getStringTopic("IntakeRollerState").getEntry(getRollerState().toString());
+    intakeRollerStateEntry = intakeRollerTable.getStringTopic("IntakeRollerState")
+        .getEntry(getRollerState().toString());
   }
 
   public static IntakeSubsystem getInstance() {
@@ -39,7 +40,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public enum RollerState {
-    STOPPED, COLLECTING, SPITTING
+    STOPPED, COLLECTING, SPITTING, CONE_STOPPED, CUBE_STOPPED
   }
 
   @Override
@@ -62,6 +63,12 @@ public class IntakeSubsystem extends SubsystemBase {
         break;
       case SPITTING:
         setIntakeSpeed(-IntakeConstants.intakeSpeed);
+        break;
+      case CONE_STOPPED:
+        setIntakeSpeed(0);
+        break;
+      case CUBE_STOPPED:
+        setIntakeSpeed(0);
         break;
     }
   }

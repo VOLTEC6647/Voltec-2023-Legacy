@@ -9,7 +9,6 @@ import java.util.List;
 import com.andromedalib.andromedaSwerve.systems.AndromedaSwerve;
 import com.andromedalib.andromedaSwerve.utils.SwerveConstants;
 import com.andromedalib.sensors.SuperNavx;
-import com.andromedalib.vision.LimelightHelpers;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -20,7 +19,6 @@ import com.team6647.util.Constants.DriveConstants;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -70,6 +68,9 @@ public class AutoDriveSubsystem extends SubsystemBase {
 
     field.setRobotPose(getPose());
     SmartDashboard.putData(field);
+
+    SmartDashboard.putNumber("Pitch", getNavxPitch());
+
   }
 
   /**
@@ -78,6 +79,10 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * @return Navx Roll
    */
   public double getNavxRoll() {
+    return navx.getRoll();
+  }
+
+  public double getNavxPitch() {
     return navx.getPitch();
   }
 
@@ -86,22 +91,25 @@ public class AutoDriveSubsystem extends SubsystemBase {
    * {@link SwerveDrivePoseEstimator}
    */
   public void computeVisionMeasurements() {
-    LimelightHelpers.Results result = LimelightHelpers.getLatestResults("limelight").targetingResults;
-
-    if (!(result.botpose[0] == 0 && result.botpose[1] == 0) &&
-        LimelightHelpers.getTA("limelight") < 30) {
-      if (alliance == Alliance.Blue) {
-        poseEstimator.addVisionMeasurement(
-            LimelightHelpers.toPose2D(result.botpose_wpiblue),
-            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
-                (result.latency_pipeline / 1000.0));
-      } else if (alliance == Alliance.Red) {
-        poseEstimator.addVisionMeasurement(
-            LimelightHelpers.toPose2D(result.botpose_wpired),
-            Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
-                (result.latency_pipeline / 1000.0));
-      }
-    }
+    /*
+     * LimelightHelpers.Results result =
+     * LimelightHelpers.getLatestResults("limelight").targetingResults;
+     * 
+     * if (!(result.botpose[0] == 0 && result.botpose[1] == 0) &&
+     * LimelightHelpers.getTA("limelight") < 30) {
+     * if (alliance == Alliance.Blue) {
+     * poseEstimator.addVisionMeasurement(
+     * LimelightHelpers.toPose2D(result.botpose_wpiblue),
+     * Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
+     * (result.latency_pipeline / 1000.0));
+     * } else if (alliance == Alliance.Red) {
+     * poseEstimator.addVisionMeasurement(
+     * LimelightHelpers.toPose2D(result.botpose_wpired),
+     * Timer.getFPGATimestamp() - (result.latency_capture / 1000.0) -
+     * (result.latency_pipeline / 1000.0));
+     * }
+     * }
+     */
   }
 
   /**
